@@ -1,0 +1,245 @@
+$blue: #007DD2
+$white: #FFF
+$black: #333
+$gray: #CCC
+$green: #00B259
+$alpha: rgba(255, 255, 255, 0.4)
+$alpha-dark: rgba(0, 0, 0, 0.4)
+$icon-blue: #57B0DC
+$icon-blue-shadow: #00A3D9
+
+body
+  padding: 0
+  margin: 0
+  color: $black
+
+.hide
+  display: none
+
+header
+  $gap: 15px
+
+  background: $blue
+  font: 30px/60px Arial
+  color: $white
+  text-align: center
+
+  a
+    position: absolute
+
+  .diamond
+    background: url(../img/diamond.png) no-repeat
+    width: 29px
+    height: 30px
+    vertical-align: middle
+    display: inline-block
+
+  .back-button
+    top: $gap - 3px
+    left: $gap - 4px
+    line-height: 28px
+    padding: 4px
+
+    img
+      display: block
+
+    &:active
+      background: $alpha
+
+  .help-button
+    $width: 60px
+    $height:30px
+
+    background: $white
+    border-radius: 6px
+    top: $gap
+    right: $gap
+    display: block
+    width: $width
+    text:
+      decoration: none
+      align: center
+    color: $black
+    font: 18px/30px Simhei
+
+    &:active
+      line-height: $height - 2px
+      top: $gap + 1px
+      width: $width - 2px
+      right: $gap + 1px
+
+#wrapper
+  position: absolute
+  top: 60px
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 0
+
+#scroller
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+
+.item
+  $gap: 10px
+  padding: 10px
+  border-bottom: 1px solid #EFEFEF
+  display: box
+  display: -webkit-box
+  box-orient: horizontal
+  -webkit-box-orient: horizontal
+
+  .item-icon
+    width: 50px
+    height: 50px
+    padding: 5px
+    margin-right: 10px
+    background: $icon-blue
+    box-shadow: inset 0 0 2px 2px $alpha-dark
+    border-radius: 4px
+    display: block
+
+  .desc
+    box-flex: 1
+    -webkit-box-flex: 1
+    font-size: 16px
+
+    h2
+      font: bold 20px/25px Simhei
+      margin: 0 0 5px
+
+      small
+        font: 14px/20px Simsun
+        display: inline-block
+        margin-left: $gap + 8px
+        text-indent: $gap + 5px
+        border-left: 2px solid $gray
+        color: $gray
+        vertical-align: middle
+    p
+      margin: 0
+
+  .download-button
+    padding: 2px
+    width: 56px
+    height: 56px
+    background: $blue
+    border-radius: 4px
+    text-align: center
+    color: $white
+    font: 18px/28px Arial
+
+    div
+      background: $white
+      border-radius: 0 0 4px 4px
+      color: $blue
+      font: 24px/28px Tahoma
+
+#download-panel
+  position: absolute
+  top: 65px
+  left: 5px
+  right: 5px
+  padding: 20px
+  z-index: 1
+  background: $white
+  box-shadow: 0 1px 4px 1px $alpha-dark
+
+  .item-icon
+    background: $icon-blue
+    float: left
+    border-radius: 6px
+    padding: 10px
+    overflow: hidden
+    margin-right: 20px
+    box-shadow: inset 0 0 4px 3px $alpha-dark
+
+  section
+    display: box
+    display: -webkit-box
+    margin-left: 0
+    box-orient: vertical
+    -webkit-box-orient: vertical
+
+    h3
+      margin: 0 0 10px
+      font: bold 26px/30px Simhei
+
+    ol
+      margin: 0 0 10px
+      font: 18px/27px Simhei
+
+      li:last-child
+        color: $green
+
+      .success
+        font: 22px/30px Simhei
+        color: $green
+
+  .progress
+    height: 40px
+    background: lighten($blue, 20%)
+
+    .bar
+      height: 40px
+      background: $blue
+
+  .close
+    position: absolute
+    top: 15px
+    right: 20px
+    margin: 0
+    padding: 0
+    border: none
+    background: transparent
+    font: 30px/30px Arial
+
+#help
+  position: absolute
+  left: 5px
+  top: 65px
+  right: 5px
+  font: 16px/25px Simhei
+
+  h3
+    text-indent: 15px
+    font: bold 20px/30px Simhei
+
+  dl
+    padding: 0 15px
+
+    dt
+      margin-bottom: 5px
+
+    dd
+      margin: 0 0 10px
+
+  form
+    padding: 0 15px 5px
+    overflow: hidden
+
+    textarea
+      padding: 4px 10px
+      width: 100%
+      box-sizing: border-box
+      -webkit-box-sizing: border-box
+      font: 16px/25px Simhei
+
+      &:focus
+        border-color: #4DA6FF
+
+    button
+      float: right
+      background: $blue
+      border: none
+      color: $white
+      font: 22px/40px Simhei
+      width: 120px
+
+  p
+    text-align: center
+
+    img
+      vertical-align: middle
