@@ -28,7 +28,7 @@ header
     position: absolute
 
   .diamond
-    background: url(../img/diamond.png) no-repeat
+    background: url(../img/sprite.png) no-repeat 0 -40px
     width: 29px
     height: 30px
     vertical-align: middle
@@ -37,11 +37,10 @@ header
   .back-button
     top: $gap - 3px
     left: $gap - 4px
-    line-height: 28px
     padding: 4px
-
-    img
-      display: block
+    background: url(../img/sprite.png) no-repeat
+    width: 32px
+    height: 28px
 
     &:active
       background: $alpha
@@ -241,5 +240,107 @@ header
   p
     text-align: center
 
+    .icon-logo
+      background: url(../img/sprite.png) no-repeat 0 -125px
+      width: 30px
+      height: 31px
+      display: inline-block
+      vertical-align: text-bottom
+
+#detail
+  position: absolute
+  left: 0
+  top: 60px
+  right: 0
+  bottom: 0
+  padding: 10px
+  overflow-y: auto
+
+  .item-icon
+    float: left
+    margin-right: 10px
+
+  .desc
+    display: box
+    display: -webkit-box
+    box-orient: vertical
+    -webkit-box-orient: vertical
+    padding: 0 0 10px
+
+    h2
+      font: bold 24px/30px Simhei
+      margin: 0 0 20px
+
+      small
+        font: 14px/24px Simhei
+        color: $gray
+        margin-left: 18px
+        border-left: 2px solid $gray
+        text-indent: 15px
+        display: inline-block
+        vertical-align: middle
+
+    span
+      width: 70px
+      text-align: center
+      font: 18px/30px Simhei
+      display: inline-block
+
+    span:first-of-type
+      background: $blue
+      color: $white
+      margin-left: 2px
+
+    span:last-of-type
+      border: 1px solid $blue
+      line-height: 28px
+      color: $blue
+
+  .carousel
+    padding: 10px 0
+    border-top: 1px solid $gray
+    border-bottom: 1px solid $gray
+
     img
-      vertical-align: middle
+      margin-right: 10px
+      display: inline-block
+
+  h3
+    font: bold 20px/25px Simhei
+    margin: 10px 0
+
+  .version, .rate
+    font: bold 20px/25px Simhei
+
+  .stars
+    display: inline-block
+    height: 25px
+    vertical-align: bottom
+    background: url(../img/sprite.png) repeat-x 0 -96px
+
+  @for $i from 1 through 5
+    .star-#{$i}
+      width: 25px * $i
+
+  .download-button
+    position: absolute
+    bottom: 0
+    left: 0
+    right: 0
+    font: bold 24px/60px Simhei
+    color: $white
+    text:
+      align: center
+      decoration: none
+    background: rgba(0, 125, 210, 0.8)
+    display: block
+
+    .icon-download
+      width: 30px
+      height: 21px
+      background: url(../img/sprite.png) no-repeat 0 -70px
+      display: inline-block
+      vertical-align: text-bottom
+
+    &:active
+      background: $blue
