@@ -1,0 +1,43 @@
+body
+  -webkit-backface-visibility: hidden
+
+@mixin animation-type($key, $value)
+  -webkit-animation-#{$key}: $value
+  animation-#{$key}: $value
+
+.animated
+  @include animation-type(duration, 0.5s)
+  @include animation-type(fill-mode, both)
+
+@mixin animation($key)
+  .#{$key}
+    -webkit-animation-name: $key
+    animation-name: $key
+
+@include animation(slideIn)
+
+@-webkit-keyframes slideIn
+  0%
+    -webkit-transform: translateX(100%)
+  100%
+    -webkit-transform: translateX(0%)
+
+@keyframes slideIn
+  0%
+    transform: translateX(100%)
+  100%
+    transform: translateX(0%)
+
+@include  animation(slideOut)
+
+@-webkit-keyframes slideOut
+  0%
+    -webkit-transform: translateX(0%)
+  100%
+    -webkit-transform: translateX(100%)
+
+@keyframes slideOut
+  0%
+    transform: translateX(0%)
+  100%
+    transform: translateX(100%)

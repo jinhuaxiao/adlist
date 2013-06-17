@@ -1,12 +1,12 @@
 function $(selector, root) {
   root = root || document;
-  return root.querySelectorAll(selector);
+  return root.querySelector(selector);
 }
 function slidePageIn(page) {
-
+  page.className = 'animated slideIn';
 }
 function slidePageOut(page) {
-
+  page.className = 'animated slideOut';
 }
 function loadDetail() {
 
@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var help = $('#help');
     currPages.push(help);
     slidePageIn(help);
+
+    event.gesture.preventDefault();
   });
 
   var backButton = $('.back-button');
