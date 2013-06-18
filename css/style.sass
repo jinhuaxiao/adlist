@@ -44,7 +44,7 @@ header
     height: 28px
 
     &:active
-      background: $alpha
+      background-color: $alpha
 
   .help-button
     $width: 60px
@@ -68,19 +68,19 @@ header
       width: $width - 2px
       right: $gap - 4px
 
-#list
+.panel
   position: absolute
   top: 60px
   left: 0
   right: 0
-  bottom: 0
+  background: $white
+  padding: 10px
   z-index: 0
 
-#scroller
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
+#list
+  @extend .panel
+  bottom: 0
+  padding: 0
 
 .item
   $gap: 10px
@@ -130,6 +130,7 @@ header
     text-align: center
     color: $white
     font: 18px/28px Arial
+    display: block
 
     div
       background: $white
@@ -197,12 +198,8 @@ header
     font: 30px/30px Arial
 
 #help
-  position: absolute
-  left: 5px
-  top: 65px
-  right: 5px
+  @extend .panel
   font: 16px/25px Simhei
-  background: $white
 
   h3
     text-indent: 15px
@@ -231,6 +228,9 @@ header
       &:focus
         border-color: #4DA6FF
 
+      &:disabled
+        background: lighten($gray, 10%)
+
     button
       float: right
       background: $blue
@@ -238,6 +238,9 @@ header
       color: $white
       font: 22px/40px Simhei
       width: 120px
+
+      &:disabled
+        background-color: $gray
 
   p
     text-align: center
@@ -250,12 +253,8 @@ header
       vertical-align: text-bottom
 
 #detail
-  position: absolute
-  left: 0
-  top: 60px
-  right: 0
+  @extend .panel
   bottom: 0
-  padding: 10px
   overflow-y: auto
 
   .item-icon

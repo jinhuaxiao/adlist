@@ -1,0 +1,20 @@
+{
+  "name": "ADlist",
+  "description": "2013 new version",
+  "url": "http://www.dianjoy.com/",
+  "version": "1.0.0",
+  "repository": "git@github.com:Dianjoy/adlist.git",
+  "author": "Meathill <lujia.zhai@dianjoy.com> (http://blog.meathill.com/)",
+  "dependencies": {
+    "handlebars": ">=1.0.10",
+    "hammerjs": ">=1.0.5"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.6.0",
+    "grunt-text-replace": "~0.3.1"
+  }
+}
