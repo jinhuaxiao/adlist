@@ -1,11 +1,4 @@
 'use strict';
-
-function slidePageIn(page) {
-  page.className = 'animated slideIn';
-}
-function slidePageOut(page) {
-  page.className = 'animated slideOut';
-}
 function showDownloadPanel() {
   var info = $('#download-panel');
   info.className = 'animated slideDown';
@@ -17,49 +10,29 @@ function hideDownloadPanel() {
 
   info.className = 'animated slideUp';
 }
-function loadDetail() {
 
-}
 document.addEventListener('DOMContentLoaded', function () {
-  var list = $('#list'),
-      currPages = [];
-  Hammer(list).on('tap', function (event) {
-    var button = event.target;
-    if (button.className === 'download-button' || button.parentNode.className === 'download-button') {
-      showDownloadPanel();
-      return;
-    }
-    var detail = $('#detail');
-    currPages.push(detail);
-    slidePageIn(detail);
-  });
+  var detail = new $.DetailPanel('#detail'),
+      list = new $.ListPanel({
+        el: '#list',
+        detail: detail
+      }),
+      help = new $.HelpPanel('#help'),
+      header = $('header'),
+      panel = $('#download-panel');
+  $.detect3DSupport(list.$el);
 
-  var helpButton = $('.help-button');
-  Hammer(helpButton).on('tap', function (event) {
-    var help = $('#help');
-    currPages.push(help);
-    slidePageIn(help);
-
-    event.gesture.preventDefault();
-  });
-
-  var backButton = $('.back-button');
-  Hammer(backButton).on('tap', function (event) {
-    if (currPages.length > 0) {
-      slidePageOut(currPages.pop());
-      event.gesture.preventDefault();
+  Hammer(header).on('tap', function (event) {
+    if (event.target.className === 'help-button') {
+      event.target.className = event.target.className + ' hide';
+      help.slideIn();
+      return false;
+    } else if (event.target.className === 'back-button' && $.Panel.visiblePages.length > 0) {
+      $.Panel.visiblePages.pop().slideOut();
       return false;
     }
   });
 
-  var detail = $('#detail');
-  Hammer(detail).on('tap', function (event) {
-    if (event.target.className == 'download-button') {
-      showDownloadPanel();
-    }
-  });
-
-  var panel = $('#download-panel');
   Hammer(panel).on('tap', function (event) {
     if (event.target.className === 'close') {
       hideDownloadPanel();
@@ -67,22 +40,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   });
 
-  $('#comments').addEventListener('submit', function (event) {
-    $.ajax({
-      url: this.action,
-      method: this.method,
-      data: {
-        comment: this.elements['comment'].value
-      },
-      context: this,
-      success: function () {
-        this.elements['submit'].text('提交成功');
-      }
-    });
-    this.elements['comment'].disabled = true;
-    this.elements['submit'].disabled = true;
-    event.preventDefault();
-  });
+  // 调试环境下，从页面中取模版
+  if (DEBUG) {
+    Handlebars.templates = Handlebars.templates || {};
+    var template = $('script', list.$el).innerHTML;
+    Handlebars.templates['list'] = Handlebars.compile(template);
+
+    template = $('script', detail.$el).innerHTML;
+    Handlebars.templates['detail'] = Handlebars.compile(template);
+
+    template = $('script', panel).innerHTML;
+    Handlebars.templates['panel'] = Handlebars.compile(template);
+  }
+
+  // 生成列表
+  list.render(Handlebars.templates['list'](data));
 });
 
 var data = null;

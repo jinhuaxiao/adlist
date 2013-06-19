@@ -8,11 +8,15 @@ $alpha-dark: rgba(0, 0, 0, 0.4)
 $icon-blue: #57B0DC
 $icon-blue-shadow: #00A3D9
 
+html,
+body
+  height: 100%
+
 body
   padding: 0
   margin: 0
   color: $black
-  overflow-x: hidden
+  overflow: hidden
 
 .hide
   display: none
@@ -24,6 +28,10 @@ header
   font: 30px/60px Arial
   color: $white
   text-align: center
+  position: absolute
+  z-index: 2
+  left: 0
+  right: 0
 
   a
     position: absolute
@@ -127,7 +135,9 @@ header
     height: 56px
     background: $blue
     border-radius: 4px
-    text-align: center
+    text:
+      align: center
+      decoration: none
     color: $white
     font: 18px/28px Arial
     display: block
@@ -255,7 +265,6 @@ header
 #detail
   @extend .panel
   bottom: 0
-  overflow-y: auto
 
   .item-icon
     float: left
