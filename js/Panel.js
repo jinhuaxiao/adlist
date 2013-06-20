@@ -9,38 +9,11 @@
  */
 ;(function () {
   'use strict';
-
-  function onHammer(event) {
-    this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-    if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
-      var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
-      this.className = 'autoback';
-      this.offset = isDown ? 0 : this.bottom;
-      setPanelOffset(this, isDown ? 0 : this.bottom, !isDown);
-    }
-  }
-  function onDrag(event) {
-    setPanelOffset(this, event.gesture.deltaY);
-  }
   function onAnimationEnd(event) {
     this.className = event.animationName === 'slideOut' ? 'hide' : '';
   }
-  function onTransitionEnd(event) {
-    console.log(event);
+  function onTransitionEnd() {
     this.className = ''
-  }
-  function setPanelOffset(target, offset, isNew) {
-    target.tempOffset = offset;
-    offset += isNew ? 0 : target.offset;
-    if (offset > 0) {
-      offset *= 0.4;
-      offset = offset > 60 ? 60 : offset;
-    } else if (offset < target.bottom) {
-      offset = target.bottom + (offset - target.bottom) * 0.4;
-      offset = offset < target.bottom - 60 ? target.bottom - 60 : offset;
-    }
-    target.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
-      : "translate(0, " + offset + ")";
   }
 
   var Panel = $.Panel = function (options) {
@@ -57,10 +30,39 @@
       }
       var $el = this.$el = $(options.el);
       Hammer($el)
-        .on('dragup dragdown', onDrag)
-        .on('touch release', onHammer);
+        .on('dragup dragdown', $.bind(this.onDrag, this))
+        .on('touch release', $.bind(this.onHammer, this));
       $el.addEventListener('transitionend', onTransitionEnd);
       $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
+    },
+    onHammer: function (event) {
+      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
+      console.log(event.type, this.offset, this.bottom);
+      if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
+        var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
+        this.className = 'autoback';
+        this.offset = isDown ? 0 : this.bottom;
+        this.setTransform(isDown ? 0 : this.bottom);
+      }
+    },
+    onDrag: function (event) {
+      this.setPanelOffset(event.gesture.deltaY);
+    },
+    setPanelOffset: function (offset) {
+      this.tempOffset = offset;
+      offset += this.offset;
+      if (offset > 0) {
+        offset *= 0.4;
+        offset = offset > 60 ? 60 : offset;
+      } else if (offset < this.bottom) {
+        offset = this.bottom + (offset - this.bottom) * 0.4;
+        offset = offset < this.bottom - 60 ? this.bottom - 60 : offset;
+      }
+      this.setTransform(offset);
+    },
+    setTransform: function (offset) {
+      this.$el.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
+        : "translate(0, " + offset + ")";
     },
     showDownloadPanel: function () {
       var event = document.createEvent('CustomEvent');
@@ -76,7 +78,7 @@
     },
     render: function (code) {
       this.$el.innerHTML = code;
-      this.$el.bottom = $.viewportHeight - this.$el.scrollHeight;
+      this.bottom = $.viewportHeight - this.$el.scrollHeight;
     }
   };
 }());

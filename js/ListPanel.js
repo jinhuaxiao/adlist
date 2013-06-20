@@ -8,6 +8,8 @@
 ;(function () {
   'use strict';
 
+  var LOAD_MORE = '<div class="load-more">继续上拉，加载更多广告</div>';
+
   var list = $.ListPanel = function (options) {
     $.Panel.call(this, options);
 
@@ -27,7 +29,15 @@
       this.detail.render(Handlebars.templates['detail'](data.offers[index]));
       this.detail.slideIn();
     }, this));
-  };
+  }
 
   $.extend(list, $.Panel);
+
+  list.prototype.render = function (code) {
+    code += LOAD_MORE;
+    $.Panel.prototype.render.call(this, code);
+  };
+  list.prototype.append = function () {
+
+  };
 }());

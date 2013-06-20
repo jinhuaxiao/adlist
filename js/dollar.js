@@ -47,9 +47,11 @@
     $.has3D = window.getComputedStyle(target, null).getPropertyValue('-webkit-transform');
   }
   $.extend = function (subType, superType) {
-    var prototype = Object(superType.prototype);
-    prototype.constructor = subType;
-    subType.prototype = prototype;
+    var Surrogate = function () {
+      this.constructor = subType;
+    }
+    Surrogate.prototype = superType.prototype;
+    subType.prototype = new Surrogate();
   }
   $.isString = function (obj) {
     return Object.prototype.toString.call(obj) === '[object String]';
