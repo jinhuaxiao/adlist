@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
       help.slideIn();
       return false;
     } else if (event.target.className === 'back-button' && $.Panel.visiblePages.length > 0) {
+      $('.help-button', this).className = 'help-button';
       $.Panel.visiblePages.pop().slideOut();
       return false;
     }
@@ -37,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (event.target.className === 'close') {
       hideDownloadPanel();
     }
-
   });
 
   // 调试环境下，从页面中取模版
@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
     template = $('script', panel).innerHTML;
     Handlebars.templates['panel'] = Handlebars.compile(template);
   }
+
+  // 取页面高度
+  $.viewportHeight = document.documentElement.clientHeight - 60;
 
   // 生成列表
   list.render(Handlebars.templates['list'](data));

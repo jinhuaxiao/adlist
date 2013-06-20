@@ -16,7 +16,7 @@
     return result.slice(0, -1);
   }
 
-  var has3D = false;
+  var ctor = function () {};
 
   var $ = window.$ = function (selector, root) {
     root = root || document;
@@ -42,18 +42,9 @@
     }
     xhr.send();
   }
-  $.drag = function (target, offset) {
-    target.tempOffset = offset;
-    offset += target.offset;
-    if (offset > 0) {
-      offset *= 0.4;
-    }
-    target.style.WebkitTransform = has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
-        : "translate(0, " + offset + ")";
-  }
   $.detect3DSupport = function (target) {
     target.style.WebkitTransform = 'translate3D(0, 0, 0) scale(1, 1, 1)';
-    has3D = window.getComputedStyle(target).getPropertyValue('-webkit-transform');
+    $.has3D = window.getComputedStyle(target, null).getPropertyValue('-webkit-transform');
   }
   $.extend = function (subType, superType) {
     var prototype = Object(superType.prototype);
@@ -64,17 +55,22 @@
     return Object.prototype.toString.call(obj) === '[object String]';
   }
   $.bind = function (func, context) {
-    var args, bound, native = Function.prototype.bind;
-    if (native && func.bind === native) return native.apply(func, Array.prototype.slice.call(arguments, 1));
-    args = slice.call(arguments, 2);
+    var args,
+        bound,
+        native = Function.prototype.bind;
+    if (native && func.bind === native) {
+      return native.apply(func, Array.prototype.slice.call(arguments, 1));
+    }
+    args = Array.prototype.slice.call(arguments, 2);
     return bound = function() {
-      if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
+      if (!(this instanceof bound)) {
+        return func.apply(context, args.concat(Array.prototype.slice.call(arguments)));
+      }
       ctor.prototype = func.prototype;
       var self = new ctor;
       ctor.prototype = null;
-      var result = func.apply(self, args.concat(slice.call(arguments)));
-      if (Object(result) === result) return result;
-      return self;
+      var result = func.apply(self, args.concat(Array.prototype.slice.call(arguments)));
+      return Object(result) === result ? result : self;
     };
   }
 }(window));
