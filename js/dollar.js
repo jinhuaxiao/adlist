@@ -40,6 +40,7 @@
         options.error.call(context);
       }
     }
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xhr.send(stringifyParams(options.data));
   };
   $.bind = function (func, context) {

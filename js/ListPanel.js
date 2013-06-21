@@ -22,7 +22,8 @@
     return result;
   }
 
-  var pn = 1;
+  var pn = 1,
+      isLoading = false;
   var list = $.ListPanel = function (options) {
     $.Panel.call(this, options);
 
@@ -67,15 +68,18 @@
       this.$el.appendChild(fragment);
     },
     loadNextPage: function () {
+      if (isLoading) {
+        return;
+      }
       var param = getParams(location.search);
       param.pn = pn + 1;
-      pn += 1;
       $.ajax({
         url: '',
         method: 'post',
         context: this,
         data: param,
         success: function (data) {
+          isLoading = false;
           if (!data || !data.hasOwnProperty('offers') || data.offers.length === 0) {
             this.$el.className = 'no-more delay autoback';
             this.offset = this.bottom;
@@ -84,8 +88,10 @@
           }
           this.append(Handlebars.templates['list'](data));
           this.$el.className = '';
+          pn += 1;
         },
         error: function () {
+          isLoading = false;
           this.$el.className = 'error delay autoback';
           this.offset = this.bottom;
           this.setTransform(this.bottom);
