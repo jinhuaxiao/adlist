@@ -29,5 +29,5 @@
     });
   };
 
-  $.extend(help, $.Panel);
+  $.inherite(help, $.Panel);
 }());

@@ -16,7 +16,8 @@
     return result.slice(0, -1);
   }
 
-  var ctor = function () {};
+  var ctor = function () {},
+      slice = Array.prototype.slice;
 
   var $ = window.$ = function (selector, root) {
     root = root || document;
@@ -27,52 +28,57 @@
         url = options.url || '',
         context = options.context || this,
         xhr = new XMLHttpRequest();
-    xhr.open(method, url + '?' + stringifyParams(options.data));
-    xhr.onreadystatechange = function () {
-      if (this.readyState == XMLHttpRequest.DONE) {
-        if (this.status == 200) {
-          if (options.dataType == 'json') {
-            var response = JSON.parse(this.response);
-          }
-          options.success.call(context, response);
-        } else if ('error' in options) {
-          options.error.call(context);
-        }
+    xhr.open(method, url);
+    xhr.onload = function (event) {
+      if (options.dataType == 'json') {
+        var response = JSON.parse(this.response);
+      }
+      options.success.call(context, response);
+    }
+    xhr.onerror = function () {
+      if ('error' in options) {
+        options.error.call(context);
       }
     }
-    xhr.send();
-  }
-  $.detect3DSupport = function (target) {
-    target.style.WebkitTransform = 'translate3D(0, 0, 0) scale(1, 1, 1)';
-    $.has3D = window.getComputedStyle(target, null).getPropertyValue('-webkit-transform');
-  }
-  $.extend = function (subType, superType) {
-    var Surrogate = function () {
-      this.constructor = subType;
-    }
-    Surrogate.prototype = superType.prototype;
-    subType.prototype = new Surrogate();
-  }
-  $.isString = function (obj) {
-    return Object.prototype.toString.call(obj) === '[object String]';
-  }
+    xhr.send(stringifyParams(options.data));
+  };
   $.bind = function (func, context) {
     var args,
-        bound,
-        native = Function.prototype.bind;
+      bound,
+      native = Function.prototype.bind;
     if (native && func.bind === native) {
-      return native.apply(func, Array.prototype.slice.call(arguments, 1));
+      return native.apply(func, slice.call(arguments, 1));
     }
-    args = Array.prototype.slice.call(arguments, 2);
+    args = slice.call(arguments, 2);
     return bound = function() {
       if (!(this instanceof bound)) {
-        return func.apply(context, args.concat(Array.prototype.slice.call(arguments)));
+        return func.apply(context, args.concat(slice.call(arguments)));
       }
       ctor.prototype = func.prototype;
       var self = new ctor;
       ctor.prototype = null;
-      var result = func.apply(self, args.concat(Array.prototype.slice.call(arguments)));
+      var result = func.apply(self, args.concat(slice.call(arguments)));
       return Object(result) === result ? result : self;
     };
+  };
+  $.detect3DSupport = function (target) {
+    target.style.WebkitTransform = 'translate3D(0, 0, 0) scale(1, 1, 1)';
+    $.has3D = window.getComputedStyle(target, null).getPropertyValue('-webkit-transform');
+  };
+  $.extend = function (to, from) {
+    for (var prop in from) {
+      to[prop] = from[prop];
+    }
+    return to;
+  };
+  $.inherite = function (subType, superType) {
+    var Surrogate = function () {
+      this.constructor = subType;
+    };
+    Surrogate.prototype = superType.prototype;
+    subType.prototype = new Surrogate();
+  };
+  $.isString = function (obj) {
+    return Object.prototype.toString.call(obj) === '[object String]';
   }
 }(window));

@@ -37,10 +37,9 @@
     },
     onHammer: function (event) {
       this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-      console.log(event.type, this.offset, this.bottom);
       if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
         var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
-        this.className = 'autoback';
+        this.$el.className = 'autoback';
         this.offset = isDown ? 0 : this.bottom;
         this.setTransform(isDown ? 0 : this.bottom);
       }
@@ -49,8 +48,8 @@
       this.setPanelOffset(event.gesture.deltaY);
     },
     setPanelOffset: function (offset) {
-      this.tempOffset = offset;
       offset += this.offset;
+      this.tempOffset = offset;
       if (offset > 0) {
         offset *= 0.4;
         offset = offset > 60 ? 60 : offset;
@@ -58,7 +57,7 @@
         offset = this.bottom + (offset - this.bottom) * 0.4;
         offset = offset < this.bottom - 60 ? this.bottom - 60 : offset;
       }
-      this.setTransform(offset);
+     this.setTransform(offset);
     },
     setTransform: function (offset) {
       this.$el.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"

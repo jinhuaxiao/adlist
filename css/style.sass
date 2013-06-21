@@ -90,6 +90,21 @@ header
   bottom: 0
   padding: 0
 
+  &:after
+    content: '继续上拉，加载更多广告'
+    display: block
+    font: 14px/60px Simhei
+    text-align: center
+    color: lighten($black, 20%)
+
+#list.loading
+  &:after
+    content: '加载中...'
+
+#list.no-more
+  &:after
+    content: '没有其它广告了，再看看吧'
+
 .item
   $gap: 10px
   padding: 10px
@@ -116,7 +131,7 @@ header
 
     h2
       font: bold 20px/25px Simhei
-      margin: 0 0 5px
+      margin: 0 0 10px
 
       small
         font: 14px/20px Simsun
@@ -147,11 +162,6 @@ header
       border-radius: 0 0 4px 4px
       color: $blue
       font: 24px/28px Tahoma
-
-.load-more
-  font: 14px/60px Simhei
-  text-align: center
-  color: lighten($black, 20%)
 
 #download-panel
   position: absolute

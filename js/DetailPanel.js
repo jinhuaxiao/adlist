@@ -18,5 +18,5 @@
     }, this));
   };
 
-  $.extend(detail, $.Panel);
+  $.inherite(detail, $.Panel);
 }());
