@@ -57,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
   $.viewportHeight = document.documentElement.clientHeight - 60;
 
   // 生成列表
-  list.render(Handlebars.templates['list'](data));
+  if (data) {
+    list.render(Handlebars.templates['list'](data));
+  }
 });
 
 var data = null;

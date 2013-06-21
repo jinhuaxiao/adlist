@@ -20,11 +20,11 @@ module.exports = function (grunt) {
         separator: ';'
       },
       libs: {
-        src: ['js/libs/hammer.min.js', 'js/libs/handlebars.runtim.js'],
+        src: ['js/libs/hammer.min.js', 'js/libs/handlebars.runtime.js'],
         dest: temp + 'js/libs.js'
       },
       apps: {
-        src: ['js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js', temp + 'templates.js'],
+        src: [temp + 'js/templates.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
         dest: temp + 'js/app.js'
       }
     },
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
       },
       build: {
         files: [
-          {src: [temp + 'js/*.js'], dest: build + '/js/app.min.js'}
+          {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + '/js/app.min.js'}
         ]
       }
     },
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
     },
     extract: {
       templates: {
-        file: 'build/index.html',
+        file: build + 'templates/template.html',
         names: ['list', 'detail', 'panel']
       }
     },
@@ -64,7 +64,7 @@ module.exports = function (grunt) {
       compile: {
         options: {
           partialsUseNamespace: true,
-          namespace: 'Handlebars.templats',
+          namespace: 'Handlebars.templates',
           compilerOptions:{
             knownHelpers: {
               'if': true,
@@ -97,7 +97,7 @@ module.exports = function (grunt) {
     replace: {
       html: {
         src: ['index.html'],
-        dest: build,
+        dest: build + 'templates/template.html',
         replacements: [
           {
             from: /<!-- replace start -->[\S\s]+<!-- replace over -->/,
