@@ -30,4 +30,10 @@
   };
 
   $.inherite(help, $.Panel);
+
+  help.prototype.slideIn = function () {
+    $.Panel.prototype.slideIn.call(this);
+
+    this.bottom = this.bottom ? this.bottom : ($.viewportHeight - this.$el.scrollHeight);
+  }
 }());
