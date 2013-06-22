@@ -144,7 +144,8 @@ header
     p
       margin: 0
 
-  .download-button
+  .download-button,
+  .downloaded
     padding: 2px
     width: 56px
     height: 56px
@@ -162,6 +163,12 @@ header
       border-radius: 0 0 4px 4px
       color: $blue
       font: 24px/28px Tahoma
+
+  .downloaded
+    background: $gray
+
+    div
+      color: $gray
 
 #download-panel
   position: absolute

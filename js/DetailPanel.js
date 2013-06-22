@@ -19,4 +19,14 @@
   };
 
   $.inherite(detail, $.Panel);
+
+  detail.prototype.showDownloadPanel = function () {
+    var event = document.createEvent('CustomEvent'),
+        src = $('img', this.$el).src;
+    event.initCustomEvent('downloadStart', true, false, {
+      index: this.index,
+      src: src
+    });
+    this.$el.dispatchEvent(event);
+  }
 }());

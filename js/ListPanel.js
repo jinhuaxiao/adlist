@@ -30,19 +30,22 @@
     this.detail = options.detail;
 
     Hammer(this.$el).on('tap', $.bind(function (event) {
-      if ($('.download-button', this.$el).contains(event.target)) {
-        this.showDownloadPanel();
-        return;
-      }
-
       var target = event.target;
       if (target.id === 'list') {
         return;
       }
       while (target.className !== 'item') {
+        if (target.className === 'download-button') {
+          target.className = 'downloaded';
+          target.innerHTML = '已<br />下载';
+          this.showDownloadPanel(target.parentNode.firstElementChild.src);
+          return;
+        }
         target = target.parentNode;
       }
+
       var index = Array.prototype.indexOf.call(this.$el.children, target);
+      this.detail.index = index;
       this.detail.render(Handlebars.templates['detail'](data.offers[index]));
       this.detail.slideIn();
     }, this));
@@ -66,6 +69,11 @@
         fragment.appendChild(nodes[i]);
       }
       this.$el.appendChild(fragment);
+    },
+    disableItem: function (index) {
+      var target = $('.download-button', this.$el.children[index]);
+      target.className = 'downloaded';
+      target.innerHTML = '已<br />下载';
     },
     loadNextPage: function () {
       if (isLoading) {

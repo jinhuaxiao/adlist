@@ -57,7 +57,7 @@ module.exports = function (grunt) {
     extract: {
       templates: {
         file: build + 'templates/template.html',
-        names: ['list', 'detail', 'panel']
+        names: ['list', 'detail']
       }
     },
     handlebars: {

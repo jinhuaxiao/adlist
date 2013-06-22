@@ -1,17 +1,23 @@
-'use strict';
-function showDownloadPanel() {
-  var info = $('#download-panel');
-  info.className = 'animated slideDown';
-  info.timeout = setTimeout(hideDownloadPanel, 5000);
-}
-function hideDownloadPanel() {
-  var info = $('#download-panel');
-  clearTimeout(info.timeout);
-
-  info.className = 'animated slideUp';
-}
-
 document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+
+  function showDownloadPanel(event) {
+    var info = $('#download-panel');
+    $('img', info).src = event.detail.src;
+    info.className = 'animated slideDown';
+    info.timeout = setTimeout(hideDownloadPanel, 5000);
+
+    if (event.detail.hasOwnProperty('index')) {
+      list.disableItem(event.detail.index);
+    }
+  }
+  function hideDownloadPanel() {
+    var info = $('#download-panel');
+    clearTimeout(info.timeout);
+
+    info.className = 'animated slideUp';
+  }
+
   // 取页面高度
   $.viewportHeight = document.documentElement.clientHeight - 60;
 
@@ -43,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  document.body.addEventListener('downloadStart', showDownloadPanel);
+
   // 调试环境下，从页面中取模版
   if (DEBUG) {
     Handlebars.templates = Handlebars.templates || {};
@@ -52,8 +60,11 @@ document.addEventListener('DOMContentLoaded', function () {
     template = $('script', detail.$el).innerHTML;
     Handlebars.templates['detail'] = Handlebars.compile(template);
 
-    template = $('script', panel).innerHTML;
-    Handlebars.templates['panel'] = Handlebars.compile(template);
+    // disabled click event
+    document.body.addEventListener('click', function (event) {
+      event.preventDefault();
+      return false;
+    });
   }
 
   // 生成列表

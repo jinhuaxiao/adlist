@@ -63,9 +63,9 @@
       this.$el.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
         : "translate(0, " + offset + ")";
     },
-    showDownloadPanel: function () {
+    showDownloadPanel: function (src) {
       var event = document.createEvent('CustomEvent');
-      event.initCustomEvent('downloadStart', true, false);
+      event.initCustomEvent('downloadStart', true, false, {src: src});
       this.$el.dispatchEvent(event);
     },
     slideIn: function () {
