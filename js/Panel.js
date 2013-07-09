@@ -12,9 +12,6 @@
   function onAnimationEnd(event) {
     this.className = event.animationName === 'slideOut' ? 'hide' : '';
   }
-  function onTransitionEnd() {
-    this.className = ''
-  }
 
   var Panel = $.Panel = function (options) {
     this.initialize(options);
@@ -32,20 +29,15 @@
       Hammer($el)
         .on('dragup dragdown', $.bind(this.onDrag, this))
         .on('touch release', $.bind(this.onHammer, this));
-      $el.addEventListener('transitionend', onTransitionEnd);
+      $el.addEventListener('transitionend', this.onTransitionEnd, false);
       $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
     },
-    onHammer: function (event) {
-      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-      if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
-        var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
-        this.$el.className = 'autoback';
-        this.offset = isDown ? 0 : this.bottom;
-        this.setTransform(isDown ? 0 : this.bottom);
-      }
-    },
-    onDrag: function (event) {
-      this.setPanelOffset(event.gesture.deltaY);
+    render: function (code) {
+      this.$el.innerHTML = code;
+      var self = this;
+      setTimeout(function () {
+        self.bottom = $.viewportHeight - self.$el.scrollHeight;
+      }, 0);
     },
     setPanelOffset: function (offset) {
       offset += this.offset;
@@ -75,9 +67,20 @@
     slideOut: function () {
       this.$el.className = 'animated slideOut';
     },
-    render: function (code) {
-      this.$el.innerHTML = code;
-      this.bottom = $.viewportHeight - this.$el.scrollHeight;
+    onDrag: function (event) {
+      this.setPanelOffset(event.gesture.deltaY);
+    },
+    onHammer: function (event) {
+      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
+      if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
+        var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
+        this.$el.className = 'autoback';
+        this.offset = isDown ? 0 : this.bottom;
+        this.setTransform(isDown ? 0 : this.bottom);
+      }
+    },
+    onTransitionEnd: function () {
+      this.className = ''
     }
   };
 }());

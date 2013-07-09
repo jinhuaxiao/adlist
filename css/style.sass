@@ -288,6 +288,9 @@ header
   @extend .panel
   bottom: 0
 
+  .container
+    overflow-x: hidden
+
   .item-icon
     float: left
     margin-right: 10px
@@ -329,6 +332,10 @@ header
       color: $blue
 
   .carousel
+    display: box
+    display: -webkit-box
+    box-orient: horizontal
+    -webkit-box-orient: horizontal
     padding: 10px 0
     border-top: 1px solid $gray
     border-bottom: 1px solid $gray

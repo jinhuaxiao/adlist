@@ -21,7 +21,23 @@
 
   var $ = window.$ = function (selector, root) {
     root = root || document;
-    return root.querySelector(selector);
+    var dom;
+    switch (selector.charAt(0)) {
+      case '#':
+        selector = selector.substr(1);
+        dom = document.getElementById(selector);
+        break;
+
+      case '.':
+        selector = selector.substr(1);
+        dom = root.getElementsByClassName(selector)[0];
+        break;
+
+      default :
+        dom = root.getElementsByTagName(selector)[0];
+        break;
+    }
+    return dom;
   };
   $.ajax = function (options) {
     var method = options.method || 'get',
@@ -45,13 +61,12 @@
   };
   $.bind = function (func, context) {
     var args,
-      bound,
-      native = Function.prototype.bind;
+        native = Function.prototype.bind;
     if (native && func.bind === native) {
       return native.apply(func, slice.call(arguments, 1));
     }
     args = slice.call(arguments, 2);
-    return bound = function() {
+    return function() {
       if (!(this instanceof bound)) {
         return func.apply(context, args.concat(slice.call(arguments)));
       }

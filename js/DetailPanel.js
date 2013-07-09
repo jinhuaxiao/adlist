@@ -20,13 +20,37 @@
 
   $.inherite(detail, $.Panel);
 
-  detail.prototype.showDownloadPanel = function () {
-    var event = document.createEvent('CustomEvent'),
+  $.extend(detail.prototype, {
+    showDownloadPanel: function () {
+      var event = document.createEvent('CustomEvent'),
         src = $('img', this.$el).src;
-    event.initCustomEvent('downloadStart', true, false, {
-      index: this.index,
-      src: src
-    });
-    this.$el.dispatchEvent(event);
-  }
+      event.initCustomEvent('downloadStart', true, false, {
+        index: this.index,
+        src: src
+      });
+      this.$el.dispatchEvent(event);
+    },
+    render: function (code) {
+      $.Panel.prototype.render.call(this, code);
+      this.container = this.$el.firstElementChild;
+    },
+    setTransform: function (offset) {
+      this.container.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
+        : "translate(0, " + offset + ")";
+    },
+    onHammer: function (event) {
+      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
+      if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
+        var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
+        this.container.className = 'container autoback';
+        this.offset = isDown ? 0 : this.bottom;
+        this.setTransform(isDown ? 0 : this.bottom);
+      }
+    },
+    onTransitionEnd: function () {
+      this.firstElementChild.className = 'container';
+    }
+  });
+
+
 }());
