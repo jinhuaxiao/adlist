@@ -66,6 +66,13 @@ document.addEventListener('DOMContentLoaded', function () {
       return false;
     });
   }
+  // disabled img drag
+  document.body.addEventListener('dragstart', function (event) {
+    if (event.target.tagName.toLowerCase() === 'img') {
+      event.preventDefault();
+      return false;
+    }
+  });
 
   // 生成列表
   if (data) {
