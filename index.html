@@ -78,7 +78,7 @@
   </dl>
   <hr />
   <h3>我要投诉：</h3>
-  <form action="/dev/api/comments.php" method="post" id="comments">
+  <form action="./comments.php" method="post" id="comments">
     <textarea rows="3" placeholder="请输入您的问题" name="comment"></textarea>
     <button type="submit" name="submit">提交</button>
   </form>
@@ -102,5 +102,11 @@
 <script src="js/define.js"></script>
 <!-- replace over -->
 <script>
-  var data = {{{data}}};
+  var data = {{{data}}},
+      config = {
+        appid: '{{appid}}',
+        deviceid: '{{deviceid}}',
+        channel: '{{channel}}',
+        net: '{{net}}'
+      };
 </script>

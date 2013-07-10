@@ -16,11 +16,15 @@
         url: this.action,
         method: this.method,
         data: {
+          appid: config.appid,
+          deviceid: config.deviceid,
+          channel: config.channel,
+          net: config.net,
           comment: this.elements['comment'].value
         },
         context: this,
         success: function () {
-          this.elements['submit'].text('提交成功');
+          this.elements['submit'].innerHTML = '提交成功';
         }
       });
       this.elements['comment'].disabled = true;
