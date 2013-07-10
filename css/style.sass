@@ -290,6 +290,7 @@ header
 
   .container
     overflow-x: hidden
+    padding: 0 0 40px
 
   .item-icon
     float: left
@@ -348,8 +349,10 @@ header
     font: bold 20px/25px Simhei
     margin: 10px 0
 
-  .version, .rate
-    font: bold 20px/25px Simhei
+  .version,
+  .rate,
+  .size
+    font: bold 18px/25px Simhei
 
   .stars
     display: inline-block
@@ -360,6 +363,9 @@ header
   @for $i from 1 through 5
     .star-#{$i}
       width: 25px * $i
+
+  p
+    font: 18px/24px Simhei
 
   .download-button
     position: absolute

@@ -7,7 +7,11 @@
  */
 module.exports = function (grunt) {
   var build = 'build/',
-      temp = 'temp/';
+      temp = 'temp/',
+      JS = '<script src="js/app.min.js"></script>',
+      CSS = '<link rel="stylesheet" href="css/style.css" />',
+      CSS_BASIC = '<link rel="stylesheet" href="css/style-basic.css" />',
+      REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -50,13 +54,15 @@ module.exports = function (grunt) {
       },
       minify: {
         files: [
-          {src: ['css/*.css'], dest: build + 'css/style.css'}
+          {src: ['css/*.css'], dest: build + 'css/style-basic.css'},
+          {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'}
         ]
       }
     },
     extract: {
       templates: {
-        file: build + 'templates/template.html',
+        src: 'index.html',
+        dest: temp + 'index.html',
         names: ['list', 'detail']
       }
     },
@@ -96,12 +102,22 @@ module.exports = function (grunt) {
     },
     replace: {
       html: {
-        src: ['index.html'],
+        src: [temp + 'index.html'],
         dest: build + 'templates/template.html',
         replacements: [
           {
-            from: /<!-- replace start -->[\S\s]+<!-- replace over -->/,
-            to: '<link rel="stylesheet" href="css/style.css" />\n<script src="js/app.min.js"></script>'
+            from: REPLACE_TOKEN,
+            to: CSS + JS
+          }
+        ]
+      },
+      basic: {
+        src: [temp + 'index.html'],
+        dest: build + 'templates/template-basic.html',
+        replacements: [
+          {
+            from: REPLACE_TOKEN,
+            to: CSS_BASIC + JS
           }
         ]
       }
@@ -109,17 +125,18 @@ module.exports = function (grunt) {
   });
 
   grunt.registerMultiTask('extract', 'Extract templates.', function () {
-    var file = this.data.file,
+    var src = this.data.src,
+        dest = this.data.dest,
         names = this.data.names,
-        content = grunt.file.read(file),
-        reg = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
+        content = grunt.file.read(src),
+        REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
-    content = content.replace(reg, function (match, template) {
+    content = content.replace(REG, function (match, template) {
       grunt.file.write(temp + 'templates/' + names[index] + '.html', template);
       index++;
       return '';
     });
-    grunt.file.write(file, content);
+    grunt.file.write(dest, content);
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -129,5 +146,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-text-replace');
-  grunt.registerTask('default', ['clean:start', 'replace', 'extract', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'clean:end']);
+  grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'clean:end']);
 }

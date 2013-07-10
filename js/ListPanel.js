@@ -60,15 +60,16 @@
     },
     append: function (code) {
       var fragment = document.createDocumentFragment(),
-        div = fragment.createElement('div'),
-        nodes;
+          div = document.createElement('div'),
+          nodes;
       div.innerHTML = code;
       nodes = div.childNodes;
       fragment.textContent = '';
-      for (var i = 0, len = nodes.length; i < len; i++) {
-        fragment.appendChild(nodes[i]);
+      while (nodes.length > 0) {
+        fragment.appendChild(nodes[0]);
       }
       this.$el.appendChild(fragment);
+      this.bottom = $.viewportHeight - this.$el.scrollHeight + 60;
     },
     disableItem: function (index) {
       var target = $('.download-button', this.$el.children[index]);
@@ -81,11 +82,13 @@
       }
       var param = getParams(location.search);
       param.pn = pn + 1;
+      isLoading = true;
       $.ajax({
         url: '',
         method: 'post',
         context: this,
         data: param,
+        dataType: 'json',
         success: function (data) {
           isLoading = false;
           if (!data || !data.hasOwnProperty('offers') || data.offers.length === 0) {

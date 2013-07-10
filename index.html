@@ -30,7 +30,7 @@
     <div class="container">
       <img src="{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
-        <h2>{{name}}<small>{{size}}</small></h2>
+        <h2>{{name}}</h2>
         <span>试用</span><span>+{{number}}</span>
       </div>
       <div class="carousel">
@@ -38,10 +38,11 @@
         <img src="{{../serv}}{{this}}" width="236" height="370" />
         {{/each}}
       </div>
-      <h3>内容简介：</h3>
-      <p class="version">版本：{{version}}</p>
+      <h3>内容简介</h3>
+      <p class="version">版本：{{ver}}</p>
+      <p class="size">体积：{{size}}</p>
       <p class="rate">评分：<span class="stars star-4"></span></p>
-      <p>{{description}}</p>
+      <p>{{{description}}}</p>
     </div>
     <a href="{{download}}" class="download-button"><i class="icon-download"></i> 立即下载</a>
   </script>
