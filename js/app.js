@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  function showDownloadPanel(event) {
-    var info = $('#download-panel');
-    $('img', info).src = event.detail.src;
+  function showDownloadPanel(index) {
+    var info = $('#download-panel'),
+        item = data.offers[index];
+    $('img', info).src = item.icon;
     info.className = 'animated slideDown';
-    info.timeout = setTimeout(hideDownloadPanel, 5000);
-
-    if (event.detail.hasOwnProperty('index')) {
-      list.disableItem(event.detail.index);
+    if ('timeout' in info) {
+      clearTimeout(info.timeout);
     }
+    info.timeout = setTimeout(hideDownloadPanel, 5000);
+    list.disableItem(index);
   }
   function hideDownloadPanel() {
     var info = $('#download-panel');
@@ -26,26 +27,30 @@ document.addEventListener('DOMContentLoaded', function () {
         el: '#list',
         detail: detail
       }),
-      help = new $.HelpPanel('#help'),
-      header = $('header'),
-      panel = $('#download-panel');
+      help = new $.HelpPanel('#help');
   $.detect3DSupport(list.$el);
 
-  Hammer(header).on('tap', function (event) {
+  Hammer(document.body).on('tap', function (event) {
     if (event.target.className === 'help-button') {
       event.target.className = event.target.className + ' hide';
       help.slideIn();
       return false;
-    } else if (event.target.className === 'back-button' && $.Panel.visiblePages.length > 0) {
+    }
+    if (event.target.className === 'back-button' && $.Panel.visiblePages.length > 0) {
       $('.help-button', this).className = 'help-button';
       $.Panel.visiblePages.pop().slideOut();
       return false;
     }
-  });
-
-  Hammer(panel).on('tap', function (event) {
     if (event.target.className === 'close') {
       hideDownloadPanel();
+    }
+    if (event.target.className === 'download-button'
+        || event.target.parentNode.className === 'download-button') {
+      var target = event.target.className === 'download-button' ? event.target : event.target.parentNode;
+      if ('dataset' in target) {
+        var index = target.dataset.index;
+        showDownloadPanel(index);
+      }
     }
   });
 
@@ -55,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (DEBUG) {
     Handlebars.templates = Handlebars.templates || {};
     var template = $('script', list.$el).innerHTML;
-    Handlebars.templates['list'] = Handlebars.compile(template);
+    Handlebars.templates.list = Handlebars.compile(template);
 
     template = $('script', detail.$el).innerHTML;
-    Handlebars.templates['detail'] = Handlebars.compile(template);
+    Handlebars.templates.detail = Handlebars.compile(template);
 
     // disabled click event
     document.body.addEventListener('click', function (event) {
@@ -76,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 生成列表
   if (data) {
-    list.render(Handlebars.templates['list'](data));
+    list.render(Handlebars.templates.list(data));
   }
 
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

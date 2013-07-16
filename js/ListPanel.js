@@ -35,19 +35,21 @@
         return;
       }
       while (target.className !== 'item') {
-        if (target.className === 'download-button') {
-          target.className = 'downloaded';
-          target.innerHTML = '已<br />下载';
-          this.showDownloadPanel(target.parentNode.firstElementChild.src);
-          return;
-        }
         target = target.parentNode;
       }
-
       var index = Array.prototype.indexOf.call(this.$el.children, target);
+      if (event.target.className === 'download-button'
+          || event.target.parentNode.className === 'download-button') {
+        var target = event.target.className === 'download-button' ? event.target : event.target.parentNode;
+        target.dataset.index = index;
+        return;
+      }
+
       this.detail.index = index;
-      this.detail.render(Handlebars.templates['detail'](data.offers[index]));
+      this.detail.render(Handlebars.templates.detail(data.offers[index]));
       this.detail.slideIn();
+
+      event.stopPropagation();
     }, this));
   };
 
@@ -97,7 +99,7 @@
             this.setTransform(this.bottom);
             return;
           }
-          this.append(Handlebars.templates['list'](data));
+          this.append(Handlebars.templates.list(data));
           this.$el.className = '';
           pn += 1;
         },

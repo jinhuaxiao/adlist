@@ -26,7 +26,10 @@
         };
       }
       var $el = this.$el = $(options.el);
-      Hammer($el)
+      Hammer($el, {
+        drag_block_vertical: true,
+        swipe: false
+      })
         .on('dragup dragdown', $.bind(this.onDrag, this))
         .on('touch release', $.bind(this.onHammer, this));
       $el.addEventListener('transitionend', this.onTransitionEnd, false);
@@ -69,6 +72,7 @@
     },
     onDrag: function (event) {
       this.setPanelOffset(event.gesture.deltaY);
+      event.gesture.preventDefault();
     },
     onHammer: function (event) {
       this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
