@@ -147,7 +147,8 @@ header
       margin: 0
 
   .download-button,
-  .downloaded
+  .downloaded,
+  .installed
     padding: 2px
     width: 56px
     height: 56px
@@ -167,7 +168,8 @@ header
       color: $blue
       font: 24px/28px Tahoma
 
-  .downloaded
+  .downloaded,
+  .installed
     background: $gray
 
     div
@@ -184,13 +186,10 @@ header
   box-shadow: 0 1px 4px 1px $alpha-dark
 
   .item-icon
-    background: $icon-blue
     float: left
     border-radius: 6px
-    padding: 10px
     overflow: hidden
     margin-right: 20px
-    box-shadow: inset 0 0 4px 3px $alpha-dark
 
   section
     display: box
@@ -201,17 +200,17 @@ header
 
     h3
       margin: 0 0 10px
-      font: bold 26px/30px Simhei
+      font: bold 20px/25px Simhei
 
     ol
       margin: 0 0 10px
-      font: 18px/27px Simhei
+      font: 16px/24px Simhei
 
       li:last-child
         color: $green
 
       .success
-        font: 22px/30px Simhei
+        font: 20px/30px Simhei
         color: $green
 
   .progress
@@ -340,7 +339,7 @@ header
     border-top: 1px solid $gray
     border-bottom: 1px solid $gray
     white-space: nowrap
-    font: 20px/20px Simhei
+    font: 40px/40px Simhei
     overflow: hidden
 
     img
@@ -370,7 +369,8 @@ header
   p
     font: 18px/24px Simhei
 
-  .download-button
+  .download-button,
+  .installed
     position: absolute
     bottom: 0
     left: 0
@@ -392,3 +392,9 @@ header
 
     &:active
       background: $blue
+
+  .installed
+    background: rgba(204, 204, 204, 0.8)
+
+    &:active
+      background: $gray

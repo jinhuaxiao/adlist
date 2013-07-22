@@ -73,11 +73,6 @@
       this.$el.appendChild(fragment);
       this.bottom = $.viewportHeight - this.$el.scrollHeight + 60;
     },
-    disableItem: function (index) {
-      var target = $('.download-button', this.$el.children[index]);
-      target.className = 'downloaded';
-      target.innerHTML = '已<br />下载';
-    },
     loadNextPage: function () {
       if (isLoading) {
         return;

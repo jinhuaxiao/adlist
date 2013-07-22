@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
       clearTimeout(info.timeout);
     }
     info.timeout = setTimeout(hideDownloadPanel, 5000);
-    list.disableItem(index);
   }
   function hideDownloadPanel() {
     var info = $('#download-panel');

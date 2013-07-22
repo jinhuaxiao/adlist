@@ -17,15 +17,21 @@
   <script type="text/handlebars-template">
     {{#each offers}}
     <div class="item">
-      <img src="{{icon}}" width="50" height="50" class="item-icon" />
+      <img src="{{../serve}}{{icon}}" width="50" height="50" class="item-icon" />
       <div class="desc">
         <h2>{{name}}<small>{{size}}</small></h2>
         <p>{{text}}</p>
       </div>
+      {{#if notInstalled}}
       <a class="download-button" href="{{download}}">
         试用
         <div>+{{number}}</div>
       </a>
+      {{else}}
+      <a class="installed" href="{{href}}">
+        已安装
+      </a>
+      {{/if}}
     </div>
     {{/each}}
   </script>
@@ -33,14 +39,14 @@
 <div id="detail" class="hide">
   <script type="text/handlebars-template">
     <div class="container">
-      <img src="{{icon}}" width="80" height="80" class="item-icon" />
+      <img src="{{../serve}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
         <span>试用</span><span>+{{number}}</span>
       </div>
       <div class="carousel">
         {{#each thumbnail}}
-        <img src="{{../serv}}{{this}}" width="236" height="370" />
+        <img src="{{../serve}}{{this}}" width="236" height="370" />
         {{/each}}
       </div>
       <h3>内容简介</h3>
@@ -49,7 +55,11 @@
       <p class="rate">评分：<span class="stars star-4"></span></p>
       <p>{{{description}}}</p>
     </div>
+    {{#if notInstalled}}
     <a href="{{download}}" class="download-button"><i class="icon-download"></i> 立即下载</a>
+    {{else}}
+    <a href="{{href}}" class="installed">已安装</a>
+    {{/if}}
   </script>
 </div>
 <div id="download-panel" class="hide">
@@ -61,7 +71,7 @@
     <ol>
       <li>开始下载</li>
       <li>安装并应用</li>
-      <li><span class="success">获取积分</span></li>
+      <li><span class="success">{{success}}</span></li>
     </ol>
   </section>
   {{#has_progress}}
