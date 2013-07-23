@@ -87,6 +87,10 @@
     }
     return to;
   };
+  $.hasClass = function (dom, className) {
+    var all = dom.className;
+    return all.split(' ').indexOf(className) !== -1;
+  };
   $.inherite = function (subType, superType) {
     var Surrogate = function () {
       this.constructor = subType;
@@ -96,5 +100,5 @@
   };
   $.isString = function (obj) {
     return Object.prototype.toString.call(obj) === '[object String]';
-  }
+  };
 }(window));

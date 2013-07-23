@@ -3,7 +3,7 @@
 <meta charset="utf-8" />
 <meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <style>
-  #list:empty {
+  .hide {
     display: none;
   }
 </style>
@@ -13,17 +13,17 @@
   <span id="money">{{money}}</span>
   <a href="#help-panel" class="help-button">帮助</a>
 </header>
-<div id="list">
+<div id="list" class="hide">
   <script type="text/handlebars-template">
     {{#each offers}}
     <div class="item">
-      <img src="{{../serve}}{{icon}}" width="50" height="50" class="item-icon" />
+      <img src="{{../serv}}{{icon}}" width="50" height="50" class="item-icon" />
       <div class="desc">
         <h2>{{name}}<small>{{size}}</small></h2>
         <p>{{text}}</p>
       </div>
       {{#if notInstalled}}
-      <a class="download-button" href="{{download}}">
+      <a class="download-button {{#if is_reg}}reg{{/if}} {{#if is_task}}task{{/if}}" href="{{download}}">
         试用
         <div>+{{number}}</div>
       </a>
@@ -39,14 +39,14 @@
 <div id="detail" class="hide">
   <script type="text/handlebars-template">
     <div class="container">
-      <img src="{{../serve}}{{icon}}" width="80" height="80" class="item-icon" />
+      <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
         <span>试用</span><span>+{{number}}</span>
       </div>
       <div class="carousel">
         {{#each thumbnail}}
-        <img src="{{../serve}}{{this}}" width="236" height="370" />
+        <img src="{{../serv}}{{this}}" width="236" height="370" />
         {{/each}}
       </div>
       <h3>内容简介</h3>
@@ -84,12 +84,24 @@
 <div id="help" class="hide">
   <h3>常见问题</h3>
   <dl>
-    <dt>下载之后获取不到积分怎么办？</dt>
-    <dd>答：示例文字示例文字示例文字示例文字示例文字示例文字示示例示例文字示例文字示例文字示例文字示例文字示例文字示</dd>
-    <dt>下载之后获取不到积分怎么办？</dt>
-    <dd>答：示例文字示例文字示例文字示例文字示例文字示例文字示示例示例文字示例文字示例文字示例文字示例文字示例文字示</dd>
-    <dt>下载之后获取不到积分怎么办？</dt>
-    <dd>答：示例文字示例文字示例文字示例文字示例文字示例文字示示例示例文字示例文字示例文字示例文字示例文字示例文字示</dd>
+    <dt>广告墙上推荐的广告安全可靠么？</dt>
+    <dd>答：本广告墙推荐的所有应用，均为官方提供，经过多重严格测试，绿色、安全、免费！请您放心使用。</dd>
+    <dt>为什么我下载应用得不到相应奖励？</dt>
+    <dd>
+      <p>
+        答：有如下可能，
+      </p>
+      <ol>
+        <li>安装后未完成试用要求。广告会需要用户试用一段时间或完成注册，当您未完成退出广告应用时，我们会提示您继续完成以得到奖励。</li>
+        <li>内存/SD卡空间不够。会导致应用下载失败或者下载完安装不上，所以，建议您下载应用前检查手机以保证有足够的内存/SD卡空间。</li>
+        <li>达到每日下载上限。如果您一次下载很多个并连续激活的话，超过下载上限的应用会得不到积分。</li>
+        <li>从打开到完成激活的时间过长。如果您点击下载到产生激活的时间过长，超过一小时以上，SDK有可能无法监控到激活。</li>
+        <li>广告激活当中母应用被完全关闭或卸载（被切到后台不会有问题）。会导致SDK无法监控激活。</li>
+        <li>流氓安全软件。已知的主流安全软件（腾讯、360等）不存在激活失败的问题，但不排除有这种可能性，特别是ROOT过的手机。</li>
+      </ol>
+    </dd>
+    <dt>下载应用时因种种原因未完成，进度条也被清除了，再次下载时还要从0开始么？</dt>
+    <dd>答：只要您未清空下载历史文件，再次下载，可以继续先前的进度。</dd>
   </dl>
   <hr />
   <h3>我要投诉：</h3>
@@ -98,7 +110,7 @@
     <button type="submit" name="submit">提交</button>
   </form>
   <hr />
-  <p>
+  <p class="copyright">
     <i class="icon-logo"></i> 点乐 提供积分应用下载 &copy; 2013
   </p>
 </div>

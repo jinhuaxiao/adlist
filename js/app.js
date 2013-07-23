@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var info = $('#download-panel'),
         item = data.offers[index];
     $('img', info).src = item.icon;
+    $('.success', info).innerHTML = item.success;
     info.className = 'animated slideDown';
     if ('timeout' in info) {
       clearTimeout(info.timeout);
@@ -30,22 +31,22 @@ document.addEventListener('DOMContentLoaded', function () {
   $.detect3DSupport(list.$el);
 
   Hammer(document.body).on('tap', function (event) {
-    if (event.target.className === 'help-button') {
+    if ($.hasClass(event.target, 'help-button')) {
       event.target.className = event.target.className + ' hide';
       help.slideIn();
       return false;
     }
-    if (event.target.className === 'back-button' && $.Panel.visiblePages.length > 0) {
+    if ($.hasClass(event.target, 'back-button') && $.Panel.visiblePages.length > 0) {
       $('.help-button', this).className = 'help-button';
       $.Panel.visiblePages.pop().slideOut();
       return false;
     }
-    if (event.target.className === 'close') {
+    if ($.hasClass(event.target, 'close')) {
       hideDownloadPanel();
     }
-    if (event.target.className === 'download-button'
-        || event.target.parentNode.className === 'download-button') {
-      var target = event.target.className === 'download-button' ? event.target : event.target.parentNode;
+    if ($.hasClass(event.target, 'download-button')
+        || $.hasClass(event.target.parentNode, 'download-button')) {
+      var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
       if ('dataset' in target) {
         var index = target.dataset.index;
         showDownloadPanel(index);
@@ -91,5 +92,3 @@ document.addEventListener('DOMContentLoaded', function () {
   ga('create', 'UA-35957679-7', 'dianjoy.com');
   ga('send', 'pageview');
 });
-
-var data = null;

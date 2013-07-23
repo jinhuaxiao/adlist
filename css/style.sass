@@ -3,6 +3,9 @@ $white: #FFF
 $black: #333
 $gray: #CCC
 $green: #00B259
+$light-green: #C5FFF9
+$orange: #FFA300
+$light-orange: #FFFCD2
 $alpha: rgba(255, 255, 255, 0.4)
 $alpha-dark: rgba(0, 0, 0, 0.4)
 $icon-blue: #57B0DC
@@ -168,6 +171,20 @@ header
       color: $blue
       font: 24px/28px Tahoma
 
+  .reg
+    background: $green
+
+    div
+      background: $white
+      color: $green
+
+  .task
+    background: $orange
+
+    div
+      background: $white
+      color: $orange
+
   .downloaded,
   .installed
     background: $gray
@@ -244,9 +261,16 @@ header
 
     dt
       margin-bottom: 5px
+      font-weight: bold
 
     dd
       margin: 0 0 10px
+
+      p
+        margin-bottom: 5px
+
+      ol
+        margin: 0 0 1em 1em
 
   form
     padding: 0 15px 5px
@@ -276,7 +300,7 @@ header
       &:disabled
         background-color: $gray
 
-  p
+  .copy-right
     text-align: center
 
     .icon-logo

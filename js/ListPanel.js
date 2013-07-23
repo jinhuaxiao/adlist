@@ -28,6 +28,7 @@
     $.Panel.call(this, options);
 
     this.detail = options.detail;
+    this.$el.className = '';
 
     Hammer(this.$el).on('tap', $.bind(function (event) {
       var target = event.target;
@@ -38,15 +39,18 @@
         target = target.parentNode;
       }
       var index = Array.prototype.indexOf.call(this.$el.children, target);
-      if (event.target.className === 'download-button'
-          || event.target.parentNode.className === 'download-button') {
-        var target = event.target.className === 'download-button' ? event.target : event.target.parentNode;
+      if ($.hasClass(event.target, 'download-button')
+          || $.hasClass(event.target.parentNode, 'download-button')) {
+        var target = $.hasClass(event.target, 'download-button') ?
+            event.target : event.target.parentNode;
         target.dataset.index = index;
         return;
       }
 
+      var item = data.offers[index];
+      item.serv = data.serv;
       this.detail.index = index;
-      this.detail.render(Handlebars.templates.detail(data.offers[index]));
+      this.detail.render(Handlebars.templates.detail(item));
       this.detail.slideIn();
 
       event.stopPropagation();

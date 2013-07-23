@@ -10,8 +10,14 @@ module.exports = function (grunt) {
       temp = 'temp/',
       JS = '<script src="js/app.min.js"></script>',
       CSS = '<link rel="stylesheet" href="css/style.css" />',
-      CSS_BASIC = '<link rel="stylesheet" href="css/style-basic.css" />',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
+
+  function wrapCSS(str) {
+    return '<style>' + str + '</style>';
+  }
+  function wrapJS(str) {
+    return '<script>' + str + '</script>';
+  }
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -54,7 +60,6 @@ module.exports = function (grunt) {
       },
       minify: {
         files: [
-          {src: ['css/*.css'], dest: build + 'css/style-basic.css'},
           {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'}
         ]
       }
@@ -117,7 +122,7 @@ module.exports = function (grunt) {
         replacements: [
           {
             from: REPLACE_TOKEN,
-            to: CSS_BASIC + JS
+            to: CSS + wrapCSS(grunt.file.read('css/basic.css')) + JS
           }
         ]
       }
