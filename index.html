@@ -24,7 +24,7 @@
       </div>
       {{#if notInstalled}}
       <a class="download-button {{#if is_reg}}reg{{/if}} {{#if is_task}}task{{/if}}" href="{{download}}">
-        试用
+        {{cate}}
         <div>+{{number}}</div>
       </a>
       {{else}}
@@ -42,7 +42,7 @@
       <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
-        <span>试用</span><span>+{{number}}</span>
+        <span>{{cate}}</span><span>+{{number}}</span>
       </div>
       <div class="carousel">
         {{#each thumbnail}}

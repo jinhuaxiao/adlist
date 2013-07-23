@@ -65,12 +65,12 @@ document.addEventListener('DOMContentLoaded', function () {
     template = $('script', detail.$el).innerHTML;
     Handlebars.templates.detail = Handlebars.compile(template);
 
-    // disabled click event
-    document.body.addEventListener('click', function (event) {
-      event.preventDefault();
-      return false;
-    });
   }
+  // disabled click event
+  document.body.addEventListener('click', function (event) {
+    event.preventDefault();
+    return false;
+  });
   // disabled img drag
   document.body.addEventListener('dragstart', function (event) {
     if (event.target.tagName.toLowerCase() === 'img') {
