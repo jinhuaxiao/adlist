@@ -113,17 +113,21 @@
     onHammer: function (event) {
       this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
       if (event.type === 'release') {
-        if ( this.offset > 0) {
+        var isDown = event.gesture.direction === Hammer.DIRECTION_DOWN;
+        if ( this.offset > 0 || this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
           this.$el.className = 'autoback';
-          this.offset = 0;
-          this.setTransform(0);
-        } else if (this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
-          this.$el.className = 'autoback';
-          this.offset = this.bottom;
-          this.setTransform(this.bottom);
-        } else if (this.offset < this.bottom - 141) {
+          this.offset = isDown ? 0 : this.bottom;
+          this.setTransform(isDown ? 0 : this.bottom);
+        } else if (this.offset < this.bottom - 140) {
           this.$el.className = 'loading';
           this.loadNextPage();
+        } else {
+          var offset = this.offset + (isDown ? 1 : -1) * event.gesture.velocityY * 80;
+          offset = offset > 0 ? 0 : offset;
+          offset = offset < this.bottom ? this.bottom : offset;
+          this.$el.className = 'momentum';
+          this.setTransform(offset);
+          this.offset = offset;
         }
       }
     }

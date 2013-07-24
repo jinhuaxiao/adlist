@@ -76,11 +76,20 @@
     },
     onHammer: function (event) {
       this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-      if (event.type === 'release' && (this.offset > 0 || this.offset < this.bottom)) {
-        var isDown = event.gesture.direction == Hammer.DIRECTION_DOWN;
-        this.$el.className = 'autoback';
-        this.offset = isDown ? 0 : this.bottom;
-        this.setTransform(isDown ? 0 : this.bottom);
+      if (event.type === 'release') {
+        var isDown = event.gesture.direction === Hammer.DIRECTION_DOWN;
+        if(this.offset > 0 || this.offset < this.bottom) {
+          this.$el.className = 'autoback';
+          this.offset = isDown ? 0 : this.bottom;
+          this.setTransform(isDown ? 0 : this.bottom);
+        } else {
+          var offset = this.offset + (isDown ? -1 : 1) * event.gesture.velocityY * 80;
+          offset = offset > 0 ? 0 : offset;
+          offset = offset < this.bottom ? this.bottom : offset;
+          this.$el.className = 'momentum';
+          this.setTransform(offset);
+          this.offset = offset;
+        }
       }
     },
     onTransitionEnd: function () {
