@@ -33,7 +33,7 @@
     });
   };
 
-  $.inherite(help, $.Panel);
+  $.inherit(help, $.Panel);
 
   help.prototype.slideIn = function () {
     $.Panel.prototype.slideIn.call(this);

@@ -18,7 +18,7 @@
     }).on('dragleft dragright', $.bind(this.onCarousel, this));
   };
 
-  $.inherite(detail, $.Panel);
+  $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
     render: function (code) {

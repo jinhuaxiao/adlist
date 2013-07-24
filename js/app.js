@@ -37,9 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return false;
     }
     if ($.hasClass(event.target, 'back-button') && $.Panel.visiblePages.length > 0) {
-      $('.help-button', this).className = 'help-button';
       $.Panel.visiblePages.pop().slideOut();
-      return false;
     }
     if ($.hasClass(event.target, 'close')) {
       hideDownloadPanel();
@@ -65,11 +63,36 @@ document.addEventListener('DOMContentLoaded', function () {
     template = $('script', detail.$el).innerHTML;
     Handlebars.templates.detail = Handlebars.compile(template);
 
+    // disabled click event
+    document.body.addEventListener('click', function (event) {
+      event.preventDefault();
+      return false;
+    });
   }
-  // disabled click event
-  document.body.addEventListener('click', function (event) {
-    event.preventDefault();
-    return false;
+  // for route
+  document.body.addEventListener('webkitAnimationEnd', function (event) {
+    var length = $.Panel.visiblePages.length;
+    if (event.animationName === 'slideIn') {
+      location.hash = '#/' + event.target.id;
+      $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 1].$el.id : '';
+    } else if (event.animationName === 'slideOut') {
+      if (length === 0) {
+        $('.back-button').href = 'dianjoy:return';
+        location.href = '#';
+      } else {
+        $('.back-button').href = '#/' + length > 1 ? $.Panel.visiblePages[length - 1].$el.id : '';
+        location.href = '#/' + $.Panel.visiblePages[length - 1].$el.id;
+      }
+    }
+  });
+  window.addEventListener('hashchange', function (event) {
+    var lastPage = $.Panel.visiblePages[$.Panel.visiblePages.length - 1],
+        url = event.oldURL.substr(event.oldURL.indexOf('#/') + 2);
+    if (lastPage && url === lastPage.$el.id) {
+      $.Panel.visiblePages.pop().slideOut();
+    }
+
+    $('.help-button').className = (location.hash === '#/help' ? 'hide' : '') + ' help-button';
   });
   // disabled img drag
   document.body.addEventListener('dragstart', function (event) {

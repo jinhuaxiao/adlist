@@ -57,7 +57,7 @@
     }, this));
   };
 
-  $.inherite(list, $.Panel);
+  $.inherit(list, $.Panel);
 
   $.extend(list.prototype, {
     render: function (code) {
@@ -117,7 +117,11 @@
           this.$el.className = 'autoback';
           this.offset = 0;
           this.setTransform(0);
-        } else if (this.offset < this.bottom) {
+        } else if (this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
+          this.$el.className = 'autoback';
+          this.offset = this.bottom;
+          this.setTransform(this.bottom);
+        } else if (this.offset < this.bottom - 141) {
           this.$el.className = 'loading';
           this.loadNextPage();
         }

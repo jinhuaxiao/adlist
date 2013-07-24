@@ -45,17 +45,17 @@
         context = options.context || this,
         xhr = new XMLHttpRequest();
     xhr.open(method, url);
-    xhr.onload = function (event) {
+    xhr.onload = function () {
       if (options.dataType == 'json') {
         var response = JSON.parse(this.response);
       }
       options.success.call(context, response);
-    }
+    };
     xhr.onerror = function () {
       if ('error' in options) {
         options.error.call(context);
       }
-    }
+    };
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xhr.send(stringifyParams(options.data));
   };
@@ -91,7 +91,7 @@
     var all = dom.className;
     return all.split(' ').indexOf(className) !== -1;
   };
-  $.inherite = function (subType, superType) {
+  $.inherit = function (subType, superType) {
     var Surrogate = function () {
       this.constructor = subType;
     };
