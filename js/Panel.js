@@ -28,12 +28,33 @@
       var $el = this.$el = $(options.el);
       Hammer($el, {
         drag_block_vertical: true,
-        swipe: false
+        drag_lock_to_axis: true,
+        drag_min_distance: 5,
+        hold: false,
+        prevent_default: true,
+        prevent_mouseevents: true,
+        swipe: false,
+        transform: false
       })
         .on('dragup dragdown', $.bind(this.onDrag, this))
-        .on('touch release', $.bind(this.onHammer, this));
+        .on('touch', $.bind(this.onTouch, this))
+        .on('release', $.bind(this.onRelease, this));
       $el.addEventListener('transitionend', this.onTransitionEnd, false);
       $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
+    },
+    checkPosition: function (isDown) {
+      if (this.offset > 0 || this.offset < this.bottom) {
+        this.$el.className = 'autoback';
+        this.offset = isDown ? 0 : this.bottom;
+        this.setTransform(isDown ? 0 : this.bottom);
+      } else {
+        var offset = this.offset + (isDown ? 1 : -1) * event.gesture.velocityY * 80;
+        offset = offset > 0 ? 0 : offset;
+        offset = offset < this.bottom ? this.bottom : offset;
+        this.$el.className = 'momentum';
+        this.setTransform(offset);
+        this.offset = offset;
+      }
     },
     render: function (code) {
       this.$el.innerHTML = code;
@@ -72,25 +93,16 @@
     },
     onDrag: function (event) {
       this.setPanelOffset(event.gesture.deltaY);
+      event.preventDefault();
       event.gesture.preventDefault();
     },
-    onHammer: function (event) {
-      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-      if (event.type === 'release') {
-        var isDown = event.gesture.direction === Hammer.DIRECTION_DOWN;
-        if(this.offset > 0 || this.offset < this.bottom) {
-          this.$el.className = 'autoback';
-          this.offset = isDown ? 0 : this.bottom;
-          this.setTransform(isDown ? 0 : this.bottom);
-        } else {
-          var offset = this.offset + (isDown ? -1 : 1) * event.gesture.velocityY * 80;
-          offset = offset > 0 ? 0 : offset;
-          offset = offset < this.bottom ? this.bottom : offset;
-          this.$el.className = 'momentum';
-          this.setTransform(offset);
-          this.offset = offset;
-        }
-      }
+    onRelease: function (event) {
+      this.offset = this.tempOffset;
+      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN);
+    },
+    onTouch: function () {
+      this.$el.className = '';
+      this.offset = this.offset || 0;
     },
     onTransitionEnd: function () {
       this.className = ''

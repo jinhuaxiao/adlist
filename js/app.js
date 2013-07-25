@@ -32,12 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   Hammer(document.body).on('tap', function (event) {
     if ($.hasClass(event.target, 'help-button')) {
-      event.target.className = event.target.className + ' hide';
       help.slideIn();
-      return false;
     }
     if ($.hasClass(event.target, 'back-button') && $.Panel.visiblePages.length > 0) {
-      $.Panel.visiblePages.pop().slideOut();
+      history.back();
     }
     if ($.hasClass(event.target, 'close')) {
       hideDownloadPanel();
@@ -68,20 +66,25 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
       return false;
     });
+    // disabled img drag
+    document.body.addEventListener('dragstart', function (event) {
+      if (event.target.tagName.toLowerCase() === 'img') {
+        event.preventDefault();
+        return false;
+      }
+    });
   }
   // for route
   document.body.addEventListener('webkitAnimationEnd', function (event) {
     var length = $.Panel.visiblePages.length;
     if (event.animationName === 'slideIn') {
       location.hash = '#/' + event.target.id;
-      $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 1].$el.id : '';
+      $('.back-button').href = '#/' + (length > 1 ? $.Panel.visiblePages[length - 1].$el.id : 'home');
     } else if (event.animationName === 'slideOut') {
       if (length === 0) {
         $('.back-button').href = 'dianjoy:return';
-        location.href = '#';
       } else {
-        $('.back-button').href = '#/' + length > 1 ? $.Panel.visiblePages[length - 1].$el.id : '';
-        location.href = '#/' + $.Panel.visiblePages[length - 1].$el.id;
+        $('.back-button').href = '#/' + (length > 1 ? $.Panel.visiblePages[length - 1].$el.id : 'home');
       }
     }
   });
@@ -93,13 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     $('.help-button').className = (location.hash === '#/help' ? 'hide' : '') + ' help-button';
-  });
-  // disabled img drag
-  document.body.addEventListener('dragstart', function (event) {
-    if (event.target.tagName.toLowerCase() === 'img') {
-      event.preventDefault();
-      return false;
-    }
   });
 
   // 生成列表

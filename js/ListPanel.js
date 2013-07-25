@@ -60,6 +60,23 @@
   $.inherit(list, $.Panel);
 
   $.extend(list.prototype, {
+    checkPosition: function (isDown, velocity) {
+      if ( this.offset > 0 || this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
+        this.$el.className = 'autoback';
+        this.offset = isDown ? 0 : this.bottom;
+        this.setTransform(isDown ? 0 : this.bottom);
+      } else if (this.offset < this.bottom - 140) {
+        this.$el.className = 'loading';
+        this.loadNextPage();
+      } else {
+        var offset = this.offset + (isDown ? 1 : -1) * velocity * 80;
+        offset = offset > 0 ? 0 : offset;
+        offset = offset < this.bottom ? this.bottom : offset;
+        this.$el.className = 'momentum';
+        this.setTransform(offset);
+        this.offset = offset;
+      }
+    },
     render: function (code) {
       this.$el.innerHTML = code;
       this.bottom = $.viewportHeight - this.$el.scrollHeight + 60;
@@ -67,7 +84,8 @@
     append: function (code) {
       var fragment = document.createDocumentFragment(),
           div = document.createElement('div'),
-          nodes;
+          nodes,
+          self = this;
       div.innerHTML = code;
       nodes = div.childNodes;
       fragment.textContent = '';
@@ -75,7 +93,9 @@
         fragment.appendChild(nodes[0]);
       }
       this.$el.appendChild(fragment);
-      this.bottom = $.viewportHeight - this.$el.scrollHeight + 60;
+      setTimeout(function () {
+        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
+      }, 10);
     },
     loadNextPage: function () {
       if (isLoading) {
@@ -90,17 +110,18 @@
         context: this,
         data: param,
         dataType: 'json',
-        success: function (data) {
+        success: function (more) {
           isLoading = false;
-          if (!data || !data.hasOwnProperty('offers') || data.offers.length === 0) {
+          if (!more || !more.hasOwnProperty('offers') || more.offers.length === 0) {
             this.$el.className = 'no-more delay autoback';
             this.offset = this.bottom;
             this.setTransform(this.bottom);
             return;
           }
-          this.append(Handlebars.templates.list(data));
+          this.append(Handlebars.templates.list(more));
           this.$el.className = '';
           pn += 1;
+          data.offers = data.offers.concat(more.offers);
         },
         error: function () {
           isLoading = false;
@@ -110,27 +131,9 @@
         }
       });
     },
-    onHammer: function (event) {
-      this.offset = event.type === 'touch' ? this.offset || 0 : this.tempOffset;
-      if (event.type === 'release') {
-        var isDown = event.gesture.direction === Hammer.DIRECTION_DOWN;
-        if ( this.offset > 0 || this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
-          this.$el.className = 'autoback';
-          this.offset = isDown ? 0 : this.bottom;
-          this.setTransform(isDown ? 0 : this.bottom);
-        } else if (this.offset < this.bottom - 140) {
-          this.$el.className = 'loading';
-          this.loadNextPage();
-        } else {
-          var offset = this.offset + (isDown ? 1 : -1) * event.gesture.velocityY * 80;
-          offset = offset > 0 ? 0 : offset;
-          offset = offset < this.bottom ? this.bottom : offset;
-          this.$el.className = 'momentum';
-          this.setTransform(offset);
-          this.offset = offset;
-        }
-      }
+    onRelease: function (event) {
+      this.offset = this.tempOffset;
+      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN, event.gesture.velocityY);
     }
   });
-
 }());

@@ -9,7 +9,6 @@ module.exports = function (grunt) {
   var build = 'build/',
       temp = 'temp/',
       JS = '<script src="js/app.min.js"></script>',
-      CSS = '<link rel="stylesheet" href="css/style.css" />',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
 
   function wrapCSS(str) {
@@ -112,7 +111,7 @@ module.exports = function (grunt) {
         replacements: [
           {
             from: REPLACE_TOKEN,
-            to: CSS + JS
+            to: JS
           }
         ]
       },
@@ -122,7 +121,7 @@ module.exports = function (grunt) {
         replacements: [
           {
             from: REPLACE_TOKEN,
-            to: CSS + wrapCSS(grunt.file.read('css/basic.css')) + JS
+            to: wrapCSS(grunt.file.read('css/basic.css')) + JS
           }
         ]
       }
