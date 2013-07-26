@@ -9,14 +9,9 @@ module.exports = function (grunt) {
   var build = 'build/',
       temp = 'temp/',
       JS = '<script src="js/app.min.js"></script>',
+      BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
 
-  function wrapCSS(str) {
-    return '<style>' + str + '</style>';
-  }
-  function wrapJS(str) {
-    return '<script>' + str + '</script>';
-  }
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -35,6 +30,10 @@ module.exports = function (grunt) {
       apps: {
         src: [temp + 'js/templates.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
         dest: temp + 'js/app.js'
+      },
+      basic: {
+        src: [temp + 'js/templates-basic.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
+        dest: temp + 'js/basic.js'
       }
     },
     uglify: {
@@ -49,7 +48,8 @@ module.exports = function (grunt) {
       },
       build: {
         files: [
-          {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + '/js/app.min.js'}
+          {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + '/js/app.min.js'},
+          {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + '/js/basic.min.js'}
         ]
       }
     },
@@ -83,11 +83,13 @@ module.exports = function (grunt) {
             knownHelpersOnly: true
           },
           processName: function(filename) {
-            return filename.substring(filename.lastIndexOf('/') + 1, filename.lastIndexOf('.'));
+            var isBasic = filename.indexOf('-basic') !== -1;
+            return filename.substring(filename.lastIndexOf('/') + 1, filename.lastIndexOf(isBasic ? '-basic' : '.'));
           }
         },
         files: [
-          {src: temp + 'templates/*.html', dest: temp + 'js/templates.js'}
+          {src: temp + 'templates/*.html', dest: temp + 'js/templates.js'},
+          {src: temp + 'templates/*-basic.html', dest: temp + 'js/templates-basic.js'}
         ]
       }
     },
@@ -121,7 +123,7 @@ module.exports = function (grunt) {
         replacements: [
           {
             from: REPLACE_TOKEN,
-            to: wrapCSS(grunt.file.read('css/basic.css')) + JS
+            to: BASIC
           }
         ]
       }
@@ -136,7 +138,10 @@ module.exports = function (grunt) {
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
     content = content.replace(REG, function (match, template) {
+      var basic = template.replace(/<img .*\/>/, '');
+      basic = basic.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
       grunt.file.write(temp + 'templates/' + names[index] + '.html', template);
+      grunt.file.write(temp + 'templates/' + names[index] + '-basic.html', basic);
       index++;
       return '';
     });
