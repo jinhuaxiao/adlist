@@ -14,7 +14,6 @@
     Hammer(this.$el, {
       drag_block_horizontal: true,
       drag_lock_to_axis: true,
-      drag_min_distance: 5,
       hold: false,
       prevent_default: true,
       prevent_mouseevents: true,
@@ -22,34 +21,29 @@
       tap: false,
       transform: false
     }).on('dragleft dragright', $.bind(this.onCarousel, this));
+
+    this.parent = this.$el;
   };
 
   $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
-    checkPosition: function (isDown) {
-      if (this.offset > 0 || this.offset < this.bottom) {
-        this.container.className = 'container autoback';
-        this.offset = isDown ? 0 : this.bottom;
-        this.setTransform(isDown ? 0 : this.bottom);
-      } else {
-        var offset = this.offset + (isDown ? 1 : -1) * event.gesture.velocityY * 80;
-        offset = offset > 0 ? 0 : offset;
-        offset = offset < this.bottom ? this.bottom : offset;
-        this.container.className = 'container momentum';
-        this.setTransform(offset);
-        this.offset = offset;
-      }
-    },
     render: function (code) {
-      $.Panel.prototype.render.call(this, code);
-      this.container = this.$el.firstElementChild;
+      var self = this;
+      this.parent.innerHTML = code;
+      this.$el = this.parent.firstElementChild;
       this.carousel = $('.carousel', this.$el);
-      $('.download-button', this.$el).dataset.index = this.index;
+      $('.download-button', this.parent).dataset.index = this.index;
+      setTimeout(function () {
+        self.bottom = $.viewportHeight - self.$el.scrollHeight;
+      }, 10);
     },
-    setTransform: function (offset) {
-      this.container.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
-        : "translate(0, " + offset + ")";
+    slideIn: function () {
+      this.parent.className = 'animated slideIn';
+      $.Panel.visiblePages.push(this);
+    },
+    slideOut: function () {
+      this.parent.className = 'animated slideOut';
     },
     onCarousel: function (event) {
       var offset = this.carouselLeft - event.gesture.deltaX,
@@ -63,12 +57,8 @@
       event.gesture.preventDefault();
     },
     onTouch: function () {
-      this.$el.className = 'container';
-      this.offset = this.offset || 0;
+      $.Panel.prototype.onTouch.call(this);
       this.carouselLeft = this.carousel.scrollLeft;
-    },
-    onTransitionEnd: function () {
-      this.firstElementChild.className = 'container';
     }
   });
 }());

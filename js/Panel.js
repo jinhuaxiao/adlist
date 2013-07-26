@@ -29,7 +29,6 @@
       Hammer($el, {
         drag_block_vertical: true,
         drag_lock_to_axis: true,
-        drag_min_distance: 5,
         hold: false,
         prevent_default: true,
         prevent_mouseevents: true,
@@ -41,14 +40,16 @@
         .on('release', $.bind(this.onRelease, this));
       $el.addEventListener('transitionend', this.onTransitionEnd, false);
       $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
+
+      this.id = $el.id;
     },
-    checkPosition: function (isDown) {
+    checkPosition: function (isDown, velocity) {
       if (this.offset > 0 || this.offset < this.bottom) {
         this.$el.className = 'autoback';
         this.offset = isDown ? 0 : this.bottom;
         this.setTransform(isDown ? 0 : this.bottom);
       } else {
-        var offset = this.offset + (isDown ? 1 : -1) * event.gesture.velocityY * 80;
+        var offset = this.offset + (isDown ? 1 : -1) * velocity;
         offset = offset > 0 ? 0 : offset;
         offset = offset < this.bottom ? this.bottom : offset;
         this.$el.className = 'momentum';
@@ -61,7 +62,7 @@
       var self = this;
       setTimeout(function () {
         self.bottom = $.viewportHeight - self.$el.scrollHeight;
-      }, 0);
+      }, 10);
     },
     setPanelOffset: function (offset) {
       offset += this.offset;
@@ -98,7 +99,7 @@
     },
     onRelease: function (event) {
       this.offset = this.tempOffset;
-      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN);
+      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN, event.gesture.velocityY * 100);
     },
     onTouch: function () {
       this.$el.className = '';

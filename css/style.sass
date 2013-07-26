@@ -10,6 +10,12 @@ $alpha: rgba(255, 255, 255, 0.4)
 $alpha-dark: rgba(0, 0, 0, 0.4)
 $icon-blue: #57B0DC
 $icon-blue-shadow: #00A3D9
+$media: screen
+$webkit-feature: -webkit-min-device-pixel-ratio
+$feature: min-device-pixel-ratio
+$value: 1.5
+$resolution: min-resolution
+$dpi: 144dpi
 
 html,
 body
@@ -303,18 +309,18 @@ header
   .copyright
     text-align: center
 
-    .icon-logo
-      background: url(../img/sprite.png) no-repeat 0 -125px
-      width: 30px
-      height: 31px
-      display: inline-block
-      vertical-align: text-bottom
+  .icon-logo
+    background: url(../img/sprite.png) no-repeat 0 -125px
+    width: 30px
+    height: 31px
+    display: inline-block
+    vertical-align: text-bottom
 
 #detail
   @extend .panel
   bottom: 0
 
-  .container
+  > div
     overflow-x: hidden
     padding: 0 0 40px
 
@@ -407,12 +413,12 @@ header
     background: rgba(0, 125, 210, 0.8)
     display: block
 
-    .icon-download
-      width: 30px
-      height: 21px
-      background: url(../img/sprite.png) no-repeat 0 -70px
-      display: inline-block
-      vertical-align: text-bottom
+  .icon-download
+    width: 30px
+    height: 21px
+    background: url(../img/sprite.png) no-repeat 0 -70px
+    display: inline-block
+    vertical-align: text-bottom
 
     &:active
       background: $blue
@@ -422,3 +428,12 @@ header
 
     &:active
       background: $gray
+
+@media ($webkit-feature: $value), ($resolution: $dpi), ($feature: $value)
+  #detail .stars,
+  #detail .icon-download,
+  #help .icon-logo,
+  header .diamond,
+  header .back-button
+    background-image: url(../img/sprite@2x.png)
+    background-size: 50px 160px

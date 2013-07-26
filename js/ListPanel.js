@@ -41,7 +41,7 @@
       var index = Array.prototype.indexOf.call(this.$el.children, target);
       if ($.hasClass(event.target, 'download-button')
           || $.hasClass(event.target.parentNode, 'download-button')) {
-        var target = $.hasClass(event.target, 'download-button') ?
+        target = $.hasClass(event.target, 'download-button') ?
             event.target : event.target.parentNode;
         target.dataset.index = index;
         return;
@@ -69,7 +69,7 @@
         this.$el.className = 'loading';
         this.loadNextPage();
       } else {
-        var offset = this.offset + (isDown ? 1 : -1) * velocity * 80;
+        var offset = this.offset + (isDown ? 1 : -1) * velocity;
         offset = offset > 0 ? 0 : offset;
         offset = offset < this.bottom ? this.bottom : offset;
         this.$el.className = 'momentum';
@@ -130,10 +130,6 @@
           this.setTransform(this.bottom);
         }
       });
-    },
-    onRelease: function (event) {
-      this.offset = this.tempOffset;
-      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN, event.gesture.velocityY);
     }
   });
 }());
