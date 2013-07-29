@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var length = $.Panel.visiblePages.length;
     if (event.animationName === 'slideIn') {
       location.hash = '#/' + event.target.id;
-      $('.back-button').href = '#/' + (length > 1 ? $.Panel.visiblePages[length - 1].id : 'home');
+      $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 2].id : './';
     } else if (event.animationName === 'slideOut') {
       if (length === 0) {
         $('.back-button').href = 'dianjoy:return';
       } else {
-        $('.back-button').href = '#/' + (length > 1 ? $.Panel.visiblePages[length - 1].id : 'home');
+        $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 2].id : './';
       }
     }
   });
