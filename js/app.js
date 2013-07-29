@@ -34,8 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($.hasClass(event.target, 'help-button')) {
       help.slideIn();
     }
-    if ($.hasClass(event.target, 'back-button') && $.Panel.visiblePages.length > 0) {
-      history.back();
+    if ($.hasClass(event.target, 'back-button')) {
+      if ($.Panel.visiblePages.length > 0) {
+        history.back();
+      } else {
+        location.href = 'dianjoy:return';
+      }
     }
     if ($.hasClass(event.target, 'close')) {
       hideDownloadPanel();
@@ -61,11 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
     template = $('script', detail.$el).innerHTML;
     Handlebars.templates.detail = Handlebars.compile(template);
 
-    // disabled click event
-    document.body.addEventListener('click', function (event) {
-      event.preventDefault();
-      return false;
-    });
     // disabled img drag
     document.body.addEventListener('dragstart', function (event) {
       if (event.target.tagName.toLowerCase() === 'img') {
@@ -74,18 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+  // disabled click event
+  document.body.addEventListener('click', function (event) {
+    event.preventDefault();
+    return false;
+  });
   // for route
   document.body.addEventListener('webkitAnimationEnd', function (event) {
-    var length = $.Panel.visiblePages.length;
     if (event.animationName === 'slideIn') {
       location.hash = '#/' + event.target.id;
-      $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 2].id : './';
-    } else if (event.animationName === 'slideOut') {
-      if (length === 0) {
-        $('.back-button').href = 'dianjoy:return';
-      } else {
-        $('.back-button').href = length > 1 ? '#/' + $.Panel.visiblePages[length - 2].id : './';
-      }
     }
   });
   window.addEventListener('hashchange', function (event) {
