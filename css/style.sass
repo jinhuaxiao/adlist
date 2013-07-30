@@ -44,6 +44,10 @@ header
 
   a
     position: absolute
+    display: block
+    text:
+      decoration: none
+      align: center
 
   .diamond
     background: url(../img/sprite.png) no-repeat 0 -40px
@@ -71,11 +75,7 @@ header
     border-radius: 6px
     top: $gap
     right: $gap - 5px
-    display: block
     width: $width
-    text:
-      decoration: none
-      align: center
     color: $black
     font: 18px/30px Simhei
 
@@ -322,7 +322,7 @@ header
 
   > div
     overflow-x: hidden
-    padding: 0 0 40px
+    padding: 0 0 60px
 
   .item-icon
     float: left
@@ -372,6 +372,7 @@ header
     white-space: nowrap
     font: 40px/40px Simhei
     overflow: hidden
+    background: $white
 
     img
       display: inline

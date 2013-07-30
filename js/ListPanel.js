@@ -28,7 +28,6 @@
     $.Panel.call(this, options);
 
     this.detail = options.detail;
-    this.$el.className = '';
 
     Hammer(this.$el).on('tap', $.bind(function (event) {
       var target = event.target;
@@ -43,7 +42,7 @@
           || $.hasClass(event.target.parentNode, 'download-button')) {
         target = $.hasClass(event.target, 'download-button') ?
             event.target : event.target.parentNode;
-        target.dataset.index = index;
+        target.title = index;
         return;
       }
 
@@ -78,8 +77,13 @@
       }
     },
     render: function (code) {
+      var self = this;
       this.$el.innerHTML = code;
-      this.bottom = $.viewportHeight - this.$el.scrollHeight + 60;
+      setTimeout(function () {
+        self.$el.className = '';
+        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
+      }, 10);
+
     },
     append: function (code) {
       var fragment = document.createDocumentFragment(),

@@ -8,12 +8,12 @@
 ;(function () {
   'use strict';
 
+  var max = 0;
+
   var detail = $.DetailPanel = function (options) {
     $.Panel.call(this, options);
 
     Hammer(this.$el, {
-      drag_block_horizontal: true,
-      drag_lock_to_axis: true,
       hold: false,
       prevent_default: true,
       prevent_mouseevents: true,
@@ -30,11 +30,13 @@
   $.extend(detail.prototype, {
     render: function (code) {
       var self = this;
+      this.offset = 0;
       this.parent.innerHTML = code;
       this.$el = this.parent.firstElementChild;
       this.carousel = $('.carousel', this.$el);
       $('.download-button', this.parent).dataset.index = this.index;
       setTimeout(function () {
+        max = self.carousel.scrollWidth - self.carousel.clientWidth;
         self.bottom = $.viewportHeight - self.$el.scrollHeight;
       }, 10);
     },
@@ -46,8 +48,7 @@
       this.parent.className = 'animated slideOut';
     },
     onCarousel: function (event) {
-      var offset = this.carouselLeft - event.gesture.deltaX,
-          max = this.carousel.scrollWidth - this.carousel.clientWidth;
+      var offset = this.carouselLeft - event.gesture.deltaX;
       offset = offset > max ? max : offset;
       offset = offset < 0 ? 0 : offset;
       this.carousel.scrollLeft = offset;

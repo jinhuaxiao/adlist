@@ -10,13 +10,34 @@ document.addEventListener('DOMContentLoaded', function () {
     if ('timeout' in info) {
       clearTimeout(info.timeout);
     }
-    info.timeout = setTimeout(hideDownloadPanel, 5000);
+    info.timeout = setTimeout(hideDownloadPanel, 4000);
   }
   function hideDownloadPanel() {
     var info = $('#download-panel');
     clearTimeout(info.timeout);
 
     info.className = 'animated slideUp';
+  }
+  // 这个函数写的真丑
+  // 目的是，如果是hashchange，那么正常执行即可
+  // 如果不是，则要交换url和lastURL的值，以便后面函数运行
+  function checkURL(url) {
+    if (!url) {
+      url = location.hash.substr(2);
+      if (url === lastURL){
+        return;
+      } else {
+        var temp = url;
+        url = lastURL;
+        lastURL = temp;
+      }
+    }
+
+    var lastPage = $.Panel.visiblePages[$.Panel.visiblePages.length - 1];
+    if (lastPage && url === lastPage.id) {
+      $.Panel.visiblePages.pop().slideOut();
+    }
+    $('.help-button').className = (url === 'help' ? 'hide' : '') + ' help-button';
   }
 
   // 取页面高度
@@ -27,7 +48,8 @@ document.addEventListener('DOMContentLoaded', function () {
         el: '#list',
         detail: detail
       }),
-      help = new $.HelpPanel('#help');
+      help = new $.HelpPanel('#help'),
+      lastURL = '';
   $.detect3DSupport(list.$el);
 
   Hammer(document.body).on('tap', function (event) {
@@ -41,15 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
         location.href = 'dianjoy:return';
       }
     }
-    if ($.hasClass(event.target, 'close')) {
-      hideDownloadPanel();
-    }
     if ($.hasClass(event.target, 'download-button')
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
-      if ('dataset' in target) {
-        var index = target.dataset.index;
-        showDownloadPanel(index);
+      if ('index' in target) {
+        showDownloadPanel(target.title);
       }
     }
   });
@@ -82,17 +100,20 @@ document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('webkitAnimationEnd', function (event) {
     if (event.animationName === 'slideIn') {
       location.hash = '#/' + event.target.id;
+    } else if (event.animationName === 'slideUp') {
+      event.target.className = 'hide';
     }
   });
-  window.addEventListener('hashchange', function (event) {
-    var lastPage = $.Panel.visiblePages[$.Panel.visiblePages.length - 1],
-        url = event.oldURL.substr(event.oldURL.indexOf('#/') + 2);
-    if (lastPage && url === lastPage.id) {
-      $.Panel.visiblePages.pop().slideOut();
-    }
 
-    $('.help-button').className = (location.hash === '#/help' ? 'hide' : '') + ' help-button';
-  });
+  if ('onhashchange' in window) {
+    window.addEventListener('hashchange', function (event) {
+      var index = event.oldURL.indexOf('#/');
+      checkURL(index === -1 ? '' : event.oldURL.substr(index + 2));
+    });
+  } else {
+    setInterval(checkURL, 100);
+  }
+
 
   // 生成列表
   if (data) {

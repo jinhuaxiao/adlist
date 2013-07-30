@@ -98,8 +98,12 @@
       event.gesture.preventDefault();
     },
     onRelease: function (event) {
-      this.offset = this.tempOffset;
-      this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN, event.gesture.velocityY * 100);
+      this.offset = this.tempOffset || 0;
+      if (event.gesture.direction === Hammer.DIRECTION_DOWN
+          || event.gesture.direction === Hammer.DIRECTION_UP) {
+        this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN,
+            event.gesture.velocityY * 100);
+      }
     },
     onTouch: function () {
       this.$el.className = '';
