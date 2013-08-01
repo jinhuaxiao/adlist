@@ -18,9 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     info.className = 'animated slideUp';
   }
-  // 这个函数写的真丑
-  // 目的是，如果是hashchange，那么正常执行即可
-  // 如果不是，则要交换url和lastURL的值，以便后面函数运行
   function checkURL(url) {
     var lastPage = $.Panel.visiblePages[$.Panel.visiblePages.length - 1];
     if (lastPage && url === lastPage.id) {
@@ -38,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
         detail: detail
       }),
       help = new $.HelpPanel('#help'),
-      hasHashchange = 'onhashchange' in window;
+      hasHashchange = 'onhashchange' in window,
+      lastURL = '';
   $.detect3DSupport(list.$el);
 
   Hammer(document.body).on('tap', function (event) {
@@ -97,9 +95,9 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   if (hasHashchange) {
-    window.addEventListener('hashchange', function (event) {
-      var index = event.oldURL.indexOf('#/');
-      checkURL(index === -1 ? '' : event.oldURL.substr(index + 2));
+    window.addEventListener('hashchange', function () {
+      checkURL(lastURL);
+      lastURL = location.hash.substr(2);
     });
   }
 
