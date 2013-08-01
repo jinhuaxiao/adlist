@@ -34,7 +34,7 @@
       this.parent.innerHTML = code;
       this.$el = this.parent.firstElementChild;
       this.carousel = $('.carousel', this.$el);
-      $('.download-button', this.parent).dataset.index = this.index;
+      $('.download-button', this.parent).index = this.index;
       setTimeout(function () {
         max = self.carousel.scrollWidth - self.carousel.clientWidth;
         self.bottom = $.viewportHeight - self.$el.scrollHeight;

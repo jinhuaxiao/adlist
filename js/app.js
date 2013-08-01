@@ -22,17 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // 目的是，如果是hashchange，那么正常执行即可
   // 如果不是，则要交换url和lastURL的值，以便后面函数运行
   function checkURL(url) {
-    if (!url) {
-      url = location.hash.substr(2);
-      if (url === lastURL){
-        return;
-      } else {
-        var temp = url;
-        url = lastURL;
-        lastURL = temp;
-      }
-    }
-
     var lastPage = $.Panel.visiblePages[$.Panel.visiblePages.length - 1];
     if (lastPage && url === lastPage.id) {
       $.Panel.visiblePages.pop().slideOut();
@@ -49,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         detail: detail
       }),
       help = new $.HelpPanel('#help'),
-      lastURL = '';
+      hasHashchange = 'onhashchange' in window;
   $.detect3DSupport(list.$el);
 
   Hammer(document.body).on('tap', function (event) {
@@ -58,7 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if ($.hasClass(event.target, 'back-button')) {
       if ($.Panel.visiblePages.length > 0) {
-        history.back();
+        if (hasHashchange) {
+          history.back();
+        } else {
+          $.Panel.visiblePages.pop().slideOut();
+        }
       } else {
         location.href = 'dianjoy:return';
       }
@@ -66,9 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($.hasClass(event.target, 'download-button')
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
-      if ('index' in target) {
-        showDownloadPanel(target.title);
-      }
+      showDownloadPanel(target.index);
     }
   });
 
@@ -91,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-  // disabled click event
-  document.body.addEventListener('click', function (event) {
+  // disabled click event for back-button
+  $('.back-button').addEventListener('click', function (event) {
     event.preventDefault();
     return false;
   });
@@ -105,13 +96,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  if ('onhashchange' in window) {
+  if (hasHashchange) {
     window.addEventListener('hashchange', function (event) {
       var index = event.oldURL.indexOf('#/');
       checkURL(index === -1 ? '' : event.oldURL.substr(index + 2));
     });
-  } else {
-    setInterval(checkURL, 100);
   }
 
 

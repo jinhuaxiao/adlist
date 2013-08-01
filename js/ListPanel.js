@@ -42,7 +42,7 @@
           || $.hasClass(event.target.parentNode, 'download-button')) {
         target = $.hasClass(event.target, 'download-button') ?
             event.target : event.target.parentNode;
-        target.title = index;
+        target.index = index;
         return;
       }
 
@@ -79,8 +79,8 @@
     render: function (code) {
       var self = this;
       this.$el.innerHTML = code;
+      this.$el.className = '';
       setTimeout(function () {
-        self.$el.className = '';
         self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
       }, 10);
 
@@ -116,7 +116,7 @@
         dataType: 'json',
         success: function (more) {
           isLoading = false;
-          if (!more || !more.hasOwnProperty('offers') || more.offers.length === 0) {
+          if (!more || !more.hasOwnProperty('offers') || !more.offers || more.offers.length === 0) {
             this.$el.className = 'no-more delay autoback';
             this.offset = this.bottom;
             this.setTransform(this.bottom);

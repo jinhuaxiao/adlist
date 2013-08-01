@@ -38,7 +38,7 @@ header
   color: $white
   text-align: center
   position: absolute
-  z-index: 2
+  z-index: 10
   left: 0
   right: 0
 
@@ -92,10 +92,10 @@ header
   right: 0
   background: $white
   padding: 10px
-  z-index: 0
 
 #list
   @extend .panel
+  z-index: 0
   padding: 0
 
   &:after
@@ -204,7 +204,7 @@ header
   left: 5px
   right: 5px
   padding: 20px
-  z-index: 1
+  z-index: 9
   background: $white
   box-shadow: 0 1px 4px 1px $alpha-dark
 
@@ -257,6 +257,7 @@ header
 #help
   @extend .panel
   font: 16px/25px Simhei
+  z-index: 2
 
   h3
     text-indent: 15px
@@ -319,6 +320,7 @@ header
 #detail
   @extend .panel
   bottom: 0
+  z-index: 1
 
   > div
     overflow-x: hidden

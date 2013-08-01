@@ -59,7 +59,8 @@ module.exports = function (grunt) {
       },
       minify: {
         files: [
-          {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'}
+          {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'},
+          {src: ['css/style.css', 'css/xs.css', 'css/animate.css'], dest: build + 'css/xs.css'}
         ]
       }
     },
@@ -110,22 +111,26 @@ module.exports = function (grunt) {
       html: {
         src: [temp + 'index.html'],
         dest: build + 'templates/template.html',
-        replacements: [
-          {
-            from: REPLACE_TOKEN,
-            to: JS
-          }
-        ]
+        replacements: [{
+          from: REPLACE_TOKEN,
+          to: JS
+        }]
       },
       basic: {
         src: [temp + 'index.html'],
         dest: build + 'templates/template-basic.html',
-        replacements: [
-          {
-            from: REPLACE_TOKEN,
-            to: BASIC
-          }
-        ]
+        replacements: [{
+          from: REPLACE_TOKEN,
+          to: BASIC
+        }]
+      },
+      xs: {
+        src: [temp + 'index.html'],
+        dest: build + 'templates/template-xs.html',
+        replacements: [{
+          from: 'style.css',
+          to: 'xs.css'
+        }]
       }
     }
   });

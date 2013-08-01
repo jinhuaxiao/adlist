@@ -46,8 +46,8 @@
         xhr = new XMLHttpRequest();
     xhr.open(method, url);
     xhr.onload = function () {
-      if (options.dataType == 'json') {
-        var response = JSON.parse(this.response);
+      if (options.dataType === 'json') {
+        var response = JSON.parse(this.responseText);
       }
       options.success.call(context, response);
     };
