@@ -132,6 +132,18 @@ module.exports = function (grunt) {
           to: 'xs.css'
         }]
       }
+    },
+    compress: {
+      sdk: {
+        options: {
+          archive: build + 'sdk.zip',
+          mode: 'zip',
+          pretty: true
+        },
+        files: [
+          {src: [build + '**'], dest: '/'}
+        ]
+      }
     }
   });
 
@@ -159,6 +171,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-handlebars');
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
-  grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'clean:end']);
+  grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'compress', 'clean:end']);
 }

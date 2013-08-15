@@ -19,7 +19,7 @@
   <script type="text/handlebars-template">
     {{#each offers}}
     <div class="item">
-      <img src="{{../serv}}{{icon}}" width="50" height="50" class="item-icon" />
+      <img src="data:image/gif;base64,R0lGODlhAQABAJEAAAAAAP///////wAAACH5BAEHAAIALAAAAAABAAEAAAICVAEAOw==" s="{{../serv}}{{icon}}" width="50" height="50" class="item-icon pre" />
       <div class="desc">
         <h2>{{name}}<small>{{size}}</small></h2>
         <p>{{text}}</p>
@@ -41,7 +41,7 @@
 <div id="detail" class="hide">
   <script type="text/handlebars-template">
     <div>
-      <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
+      <img src="{{../serv}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
         <span>{{cate}}</span><span>+{{number}}</span>
@@ -65,9 +65,7 @@
   </script>
 </div>
 <div id="download-panel" class="hide">
-  <aside class="item-icon">
-    <img src="img/sprite.png" width="100" height="100" />
-  </aside>
+  <img src="img/sprite.png" width="100" height="100" class="item-icon" />
   <section>
     <h3>如何顺利拿积分</h3>
     <ol>

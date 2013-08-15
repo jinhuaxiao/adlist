@@ -21,8 +21,16 @@
     result.output = 'JSON';
     return result;
   }
+  function loadImage(image) {
+    if (image.getAttribute('s') && image.src != image.getAttribute('s')) {
+      image.src = image.getAttribute('s');
+      image.removeAttribute('s');
+      image.className = 'item-icon';
+    }
+  }
 
   var pn = 1,
+      imgs = null,
       isLoading = false;
   var list = $.ListPanel = function (options) {
     $.Panel.call(this, options);
@@ -83,7 +91,13 @@
       setTimeout(function () {
         self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
       }, 10);
+      imgs = this.$el.getElementsByClassName('pre');
+      this.loadIcons();
+    },
+    setTransform: function (offset) {
+      $.Panel.prototype.setTransform.call(this, offset);
 
+      this.loadIcons();
     },
     append: function (code) {
       var fragment = document.createDocumentFragment(),
@@ -97,9 +111,26 @@
         fragment.appendChild(nodes[0]);
       }
       this.$el.appendChild(fragment);
+      imgs = this.$el.getElementsByClassName('pre');
       setTimeout(function () {
         self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
       }, 10);
+    },
+    loadIcons: function () {
+      // 加载图片
+      var i = 0,
+          len = imgs.length,
+          img;
+      while (i < len) {
+        img = imgs[i];
+        if ($.viewportHeight - this.offset > img.offsetTop) {
+          loadImage(img);
+          Array.prototype.splice.call(imgs, i, 1);
+          len--;
+        } else {
+          i++;
+        }
+      }
     },
     loadNextPage: function () {
       if (isLoading) {

@@ -42,6 +42,7 @@
       $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
 
       this.id = $el.id;
+      this.offset = 0;
     },
     checkPosition: function (isDown, velocity) {
       if (this.offset > 0 || this.offset < this.bottom) {
@@ -107,7 +108,6 @@
     },
     onTouch: function () {
       this.$el.className = '';
-      this.offset = this.offset || 0;
     },
     onTransitionEnd: function () {
       this.className = ''

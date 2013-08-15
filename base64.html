@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Base 64 Producer</title>
+</head>
+<body>
+<input type="file" id="uploader" />
+<textarea id="output" rows="10" cols="40"></textarea>
+<script>
+  var uploader = document.getElementById('uploader'),
+      output = document.getElementById('output');
+  uploader.addEventListener('change', function (event) {
+    var file = this.files[0],
+        reader = new FileReader();
+    reader.onloadend = function () {
+      console.log(this.result);
+      output.value = this.result;
+    }
+    reader.readAsDataURL(file);
+  });
+</script>
+</body>
+</html>
