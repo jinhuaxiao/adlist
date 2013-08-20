@@ -41,7 +41,7 @@
 <div id="detail" class="hide">
   <script type="text/handlebars-template">
     <div>
-      <img src="{{../serv}}{{icon}}" width="80" height="80" class="item-icon" />
+      <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
         <span>{{cate}}</span><span>+{{number}}</span>
@@ -126,12 +126,3 @@
 <script src="js/app.js"></script>
 <script src="js/define.js"></script>
 <!-- replace over -->
-<script>
-  var data = {{{data}}},
-      config = {
-        appid: '{{appid}}',
-        deviceid: '{{deviceid}}',
-        channel: '{{channel}}',
-        net: '{{net}}'
-      };
-</script>

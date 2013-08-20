@@ -152,12 +152,13 @@ module.exports = function (grunt) {
         dest = this.data.dest,
         names = this.data.names,
         content = grunt.file.read(src),
+        footer = grunt.file.read('js/data.js'),
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
     content = content.replace(REG, function (match, template) {
       var basic = template.replace(/<img .*\/>/, '');
       basic = basic.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
-      grunt.file.write(temp + 'templates/' + names[index] + '.html', template);
+      grunt.file.write(temp + 'templates/' + names[index] + '.html', template + footer);
       grunt.file.write(temp + 'templates/' + names[index] + '-basic.html', basic);
       index++;
       return '';

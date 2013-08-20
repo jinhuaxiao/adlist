@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (lastPage && url === lastPage.id) {
       $.Panel.visiblePages.pop().slideOut();
     }
-    $('.help-button').className = (url === 'help' ? 'hide' : '') + ' help-button';
   }
 
   // 取页面高度
@@ -98,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('hashchange', function () {
       checkURL(lastURL);
       lastURL = location.hash.substr(2);
+
+      $('.help-button').className = (lastURL === 'help' ? 'hide' : '') + ' help-button';
     });
   }
 
