@@ -10,14 +10,18 @@ module.exports = function (grunt) {
       temp = 'temp/',
       JS = '<script src="js/app.min.js"></script>',
       BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
+      SDK_JS = '<script src="data.js"></script>',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
 
+  function wrapJS(str) {
+    return '<script>' + str + '</script>';
+  }
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
       start: [build],
-      end: [temp]
+      end: [temp, build + 'index.html']
     },
     concat: {
       options: {
@@ -65,9 +69,14 @@ module.exports = function (grunt) {
       }
     },
     extract: {
-      templates: {
+      web: {
         src: 'index.html',
         dest: temp + 'index.html',
+        names: ['list', 'detail']
+      },
+      sdk: {
+        src: 'index.html',
+        dest: build + 'index.html',
         names: ['list', 'detail']
       }
     },
@@ -141,7 +150,9 @@ module.exports = function (grunt) {
           pretty: true
         },
         files: [
-          {src: [build + '**'], dest: '/'}
+          {src: [build + '**'], dest: '/', filter: function (filename) {
+            return filename.indexOf('/templates/') === -1 && filename.slice(-4) !== '.zip';
+          }}
         ]
       }
     }
@@ -152,17 +163,23 @@ module.exports = function (grunt) {
         dest = this.data.dest,
         names = this.data.names,
         content = grunt.file.read(src),
-        footer = grunt.file.read('js/data.js'),
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
     content = content.replace(REG, function (match, template) {
-      var basic = template.replace(/<img .*\/>/, '');
+      var basic = template.replace(/<img .*\/>/, ''),
+          part = names[index];
       basic = basic.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
-      grunt.file.write(temp + 'templates/' + names[index] + '.html', template + footer);
-      grunt.file.write(temp + 'templates/' + names[index] + '-basic.html', basic);
+      grunt.file.write(temp + 'templates/' + part + '.html', template);
+      grunt.file.write(temp + 'templates/' + part + '-basic.html', basic);
       index++;
-      return '';
+      return part === 'list' ? template : '';
     });
+    if (isForSDK) {
+      content = content + SDK_JS;
+    } else {
+      var footer = grunt.file.read('js/data.js');
+      content += wrapJS(footer);
+    }
     grunt.file.write(dest, content);
   });
 
