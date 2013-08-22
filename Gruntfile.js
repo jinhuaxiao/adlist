@@ -11,8 +11,36 @@ module.exports = function (grunt) {
       JS = '<script src="js/app.min.js"></script>',
       BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
       SDK_JS = '<script src="data.js"></script>',
-      REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/;
+      REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/,
+      TPL_TOKEN = /{{#(\w+)}}[\S\s]+{{\/\1}}/gm;
 
+  function convertToMustache(str) {
+    var stack = [],
+        reg = /{{([#\/]?)(\w+)?\s?(..\/)?(\w+)?}}/g;
+    str = str.replace(reg, function (match, pre, helper, path, key) {
+      if (pre === '#') {
+        stack.push({
+          type: helper,
+          key: key
+        });
+      }
+      if (pre === '/') {
+        var obj = stack.pop();
+        if (obj.type === helper) {
+          key = obj.key;
+        } else {
+          throw new Error('match error');
+        }
+      }
+      if (helper === 'else') {
+        var obj = stack[stack.length - 1];
+        return '{{/' + obj.key + '}}{{^' + obj.key + '}}';
+      }
+      key = key || helper;
+      return '{{' + pre + key + '}}';
+    });
+    return str;
+  }
   function wrapJS(str) {
     return '<script>' + str + '</script>';
   }
@@ -76,6 +104,7 @@ module.exports = function (grunt) {
       },
       sdk: {
         src: 'index.html',
+        isSDK: true,
         dest: build + 'index.html',
         names: ['list', 'detail']
       }
@@ -139,6 +168,20 @@ module.exports = function (grunt) {
         replacements: [{
           from: 'style.css',
           to: 'xs.css'
+        }, {
+          from: REPLACE_TOKEN,
+          to: JS
+        }]
+      },
+      sdk: {
+        src: [build + 'index.html'],
+        overwrite: true,
+        replacements: [{
+          from: REPLACE_TOKEN,
+          to: JS
+        }, {
+          from: TPL_TOKEN,
+          to: ''
         }]
       }
     },
@@ -150,7 +193,7 @@ module.exports = function (grunt) {
           pretty: true
         },
         files: [
-          {src: [build + '**'], dest: '/', filter: function (filename) {
+          {src: [build + '**'], dest: '..', filter: function (filename) {
             return filename.indexOf('/templates/') === -1 && filename.slice(-4) !== '.zip';
           }}
         ]
@@ -162,6 +205,7 @@ module.exports = function (grunt) {
     var src = this.data.src,
         dest = this.data.dest,
         names = this.data.names,
+        isSDK = this.data.isSDK,
         content = grunt.file.read(src),
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
@@ -172,9 +216,9 @@ module.exports = function (grunt) {
       grunt.file.write(temp + 'templates/' + part + '.html', template);
       grunt.file.write(temp + 'templates/' + part + '-basic.html', basic);
       index++;
-      return part === 'list' ? template : '';
+      return (!isSDK && part === 'list') ? convertToMustache(template) : '';
     });
-    if (isForSDK) {
+    if (isSDK) {
       content = content + SDK_JS;
     } else {
       var footer = grunt.file.read('js/data.js');
@@ -192,4 +236,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'compress', 'clean:end']);
+  grunt.registerTask('debug', ['extract:web']);
 }
