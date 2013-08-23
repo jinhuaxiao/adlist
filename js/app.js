@@ -104,8 +104,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   // 生成列表
-  if (data) {
+  if (data && config.init) {
     list.render(Handlebars.templates.list(data));
+  }
+  if (config.refresh) {
+    list.refresh();
   }
 
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

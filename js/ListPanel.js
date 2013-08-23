@@ -10,10 +10,13 @@
 
   function getParams(string) {
     var arr = string.substr(string.indexOf('?') + 1).split('&'),
-      result = {},
-      i = 0,
-      len = arr.length;
+        result = {},
+        i = 0,
+        len = arr.length;
     for (; i < len; i++) {
+      if (!arr[i]) {
+        continue;
+      }
       var kv = arr[i].split('=');
       result[kv[0]] = kv[1];
     }
@@ -133,38 +136,53 @@
       }
     },
     loadNextPage: function () {
+      this.loadPage(pn + 1);
+    },
+    loadPage: function (p, isRefresh) {
       if (isLoading) {
         return;
       }
       var param = getParams(location.search);
-      param.pn = pn + 1;
+      param.pn = p;
       isLoading = true;
+      this.isRefresh = isRefresh;
       $.ajax({
         url: '',
         method: 'post',
         context: this,
         data: param,
         dataType: 'json',
-        success: function (more) {
-          isLoading = false;
-          if (!more || !more.hasOwnProperty('offers') || !more.offers || more.offers.length === 0) {
-            this.$el.className = 'no-more delay autoback';
-            this.offset = this.bottom;
-            this.setTransform(this.bottom);
-            return;
-          }
-          this.append(Handlebars.templates.list(more));
-          this.$el.className = '';
-          pn += 1;
-          data.offers = data.offers.concat(more.offers);
-        },
-        error: function () {
-          isLoading = false;
-          this.$el.className = 'error delay autoback';
-          this.offset = this.bottom;
-          this.setTransform(this.bottom);
-        }
+        success: this.remote_successHandler,
+        error: this.remote_errorHandler
       });
+    },
+    refresh: function () {
+      this.loadPage(1, true);
+    },
+    remote_errorHandler: function () {
+      isLoading = false;
+      this.$el.className = 'error delay autoback';
+      this.offset = this.bottom;
+      this.setTransform(this.bottom);
+    },
+    remote_successHandler: function (more) {
+      isLoading = false;
+      pn = more.pn || 1;
+      if (!more || !more.hasOwnProperty('offers') || !more.offers || more.offers.length === 0) {
+        this.$el.className = 'no-more delay autoback';
+        this.offset = this.bottom;
+        this.setTransform(this.bottom);
+        return;
+      }
+      if (this.isRefresh) {
+        this.render(Handlebars.templates.list(more));
+        this.isRefresh = false;
+        data.offers = more.offers;
+      } else {
+        this.append(Handlebars.templates.list(more));
+        data.offers = data.offers.concat(more.offers);
+        this.$el.className = '';
+      }
     }
   });
 }());
