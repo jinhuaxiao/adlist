@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($.hasClass(event.target, 'download-button')
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
+      if (!/dianjoy\.com/i.test(target.href)) {
+        var index = (location.origin + location.pathname).length;
+        target.href = 'http://a.dianjoy.com/dev/api/adlist/' + target.href.substr(index);
+      }
       showDownloadPanel(target.index);
     }
   });
@@ -106,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // 生成列表
   if (data && config.init) {
     list.render(Handlebars.templates.list(data));
+  } else {
+    list.prepare();
   }
   if (config.refresh) {
     list.refresh();

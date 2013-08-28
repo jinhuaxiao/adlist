@@ -25,7 +25,7 @@
         <div>+{{number}}</div>
       </a>
       {{else}}
-      <a class="installed" href="{{href}}">
+      <a class="installed" href="{{download}}">
         已安装
       </a>
       {{/if}}
@@ -55,7 +55,7 @@
     {{#if notInstalled}}
     <a href="{{download}}" class="download-button"><i class="icon-download"></i> 立即下载</a>
     {{else}}
-    <a href="{{href}}" class="installed">已安装</a>
+    <a href="{{download}}" class="installed">已安装</a>
     {{/if}}
   </script>
 </div>

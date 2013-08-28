@@ -7,10 +7,11 @@
  */
 ;(function () {
   'use strict';
+  var REMOTE = /dianjoy\.com/i.test(location.hostname) ? '' : 'http://a.dianjoy.com/dev/api/adlist/adlist.php';
 
   function getParams(string) {
     var arr = string.substr(string.indexOf('?') + 1).split('&'),
-        result = {},
+        result = 'params' in window ? $.extend({}, params) : {},
         i = 0,
         len = arr.length;
     for (; i < len; i++) {
@@ -33,7 +34,7 @@
   }
 
   var pn = 1,
-      imgs = null,
+      images = null,
       isLoading = false;
   var list = $.ListPanel = function (options) {
     $.Panel.call(this, options);
@@ -88,14 +89,9 @@
       }
     },
     render: function (code) {
-      var self = this;
       this.$el.innerHTML = code;
       this.$el.className = '';
-      setTimeout(function () {
-        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
-      }, 10);
-      imgs = this.$el.getElementsByClassName('pre');
-      this.loadIcons();
+      this.prepare();
     },
     setTransform: function (offset) {
       $.Panel.prototype.setTransform.call(this, offset);
@@ -105,8 +101,7 @@
     append: function (code) {
       var fragment = document.createDocumentFragment(),
           div = document.createElement('div'),
-          nodes,
-          self = this;
+          nodes;
       div.innerHTML = code;
       nodes = div.childNodes;
       fragment.textContent = '';
@@ -114,21 +109,18 @@
         fragment.appendChild(nodes[0]);
       }
       this.$el.appendChild(fragment);
-      imgs = this.$el.getElementsByClassName('pre');
-      setTimeout(function () {
-        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
-      }, 10);
+      this.prepare();
     },
     loadIcons: function () {
       // 加载图片
       var i = 0,
-          len = imgs.length,
+          len = images.length,
           img;
       while (i < len) {
-        img = imgs[i];
+        img = images[i];
         if ($.viewportHeight - this.offset > img.offsetTop) {
           loadImage(img);
-          Array.prototype.splice.call(imgs, i, 1);
+          Array.prototype.splice.call(images, i, 1);
           len--;
         } else {
           i++;
@@ -147,7 +139,7 @@
       isLoading = true;
       this.isRefresh = isRefresh;
       $.ajax({
-        url: '',
+        url: REMOTE,
         method: 'post',
         context: this,
         data: param,
@@ -155,6 +147,15 @@
         success: this.remote_successHandler,
         error: this.remote_errorHandler
       });
+    },
+    prepare: function () {
+      var self = this;
+      this.$el.className = '';
+      setTimeout(function () {
+        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
+      }, 10);
+      images = this.$el.getElementsByClassName('pre');
+      this.loadIcons();
     },
     refresh: function () {
       this.loadPage(1, true);

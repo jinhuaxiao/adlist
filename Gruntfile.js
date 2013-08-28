@@ -76,12 +76,13 @@ module.exports = function (grunt) {
             'DEBUG': false
           },
           dead_code: true
-        }
+        },
+        report: 'gzip'
       },
       build: {
         files: [
-          {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + '/js/app.min.js'},
-          {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + '/js/basic.min.js'}
+          {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + 'js/app.min.js'},
+          {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + 'js/basic.min.js'}
         ]
       }
     },
