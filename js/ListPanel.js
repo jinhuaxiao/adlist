@@ -25,7 +25,24 @@
     result.output = 'JSON';
     return result;
   }
-  function loadImage(image) {
+  function loadIcons() {
+    // 加载图片
+    var i = 0,
+      len = images.length,
+      top = $.viewportHeight - (this instanceof IScroll ? this.y : 0),
+      img;
+    while (i < len) {
+      img = images[i];
+      if (top > img.offsetTop) {
+        replaceImage(img);
+        Array.prototype.splice.call(images, i, 1);
+        len--;
+      } else {
+        i++;
+      }
+    }
+  }
+  function replaceImage(image) {
     if (image.getAttribute('s') && image.src != image.getAttribute('s')) {
       image.src = image.getAttribute('s');
       image.removeAttribute('s');
@@ -41,7 +58,9 @@
 
     this.detail = options.detail;
 
-    Hammer(this.$el).on('tap', $.bind(function (event) {
+    this.scroll.on('scroll', loadIcons);
+
+    this.$el.addEventListener('tap', $.bind(function (event) {
       var target = event.target;
       if (target.id === 'list') {
         return;
@@ -63,40 +82,18 @@
       this.detail.index = index;
       this.detail.render(Handlebars.templates.detail(item));
       this.detail.slideIn();
-
-      event.stopPropagation();
-    }, this));
+    }, this), false);
   };
 
   $.inherit(list, $.Panel);
 
   $.extend(list.prototype, {
-    checkPosition: function (isDown, velocity) {
-      if ( this.offset > 0 || this.offset > this.bottom - 141 && this.offset < this.bottom - 81) {
-        this.$el.className = 'autoback';
-        this.offset = isDown ? 0 : this.bottom;
-        this.setTransform(isDown ? 0 : this.bottom);
-      } else if (this.offset < this.bottom - 140) {
-        this.$el.className = 'loading';
-        this.loadNextPage();
-      } else {
-        var offset = this.offset + (isDown ? 1 : -1) * velocity;
-        offset = offset > 0 ? 0 : offset;
-        offset = offset < this.bottom ? this.bottom : offset;
-        this.$el.className = 'momentum';
-        this.setTransform(offset);
-        this.offset = offset;
-      }
-    },
-    render: function (code) {
-      this.$el.innerHTML = code;
-      this.$el.className = '';
-      this.prepare();
-    },
-    setTransform: function (offset) {
-      $.Panel.prototype.setTransform.call(this, offset);
-
-      this.loadIcons();
+    getScrollType: function () {
+      return {
+        mouseWheel: false,
+        tap: true,
+        probeType: 3
+      };
     },
     append: function (code) {
       var fragment = document.createDocumentFragment(),
@@ -110,22 +107,6 @@
       }
       this.$el.appendChild(fragment);
       this.prepare();
-    },
-    loadIcons: function () {
-      // 加载图片
-      var i = 0,
-          len = images.length,
-          img;
-      while (i < len) {
-        img = images[i];
-        if ($.viewportHeight - this.offset > img.offsetTop) {
-          loadImage(img);
-          Array.prototype.splice.call(images, i, 1);
-          len--;
-        } else {
-          i++;
-        }
-      }
     },
     loadNextPage: function () {
       this.loadPage(pn + 1);
@@ -149,22 +130,15 @@
       });
     },
     prepare: function () {
-      var self = this;
-      this.$el.className = '';
-      setTimeout(function () {
-        self.bottom = $.viewportHeight - self.$el.scrollHeight + 60;
-      }, 10);
+      $.Panel.prototype.prepare.call(this);
       images = this.$el.getElementsByClassName('pre');
-      this.loadIcons();
+      loadIcons();
     },
     refresh: function () {
       this.loadPage(1, true);
     },
     remote_errorHandler: function () {
       isLoading = false;
-      this.$el.className = 'error delay autoback';
-      this.offset = this.bottom;
-      this.setTransform(this.bottom);
     },
     remote_successHandler: function (more) {
       isLoading = false;

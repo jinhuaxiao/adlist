@@ -8,58 +8,31 @@
 ;(function () {
   'use strict';
 
-  var max = 0;
-
   var detail = $.DetailPanel = function (options) {
     $.Panel.call(this, options);
 
-    Hammer(this.$el, {
-      hold: false,
-      prevent_default: true,
-      prevent_mouseevents: true,
-      swipe: false,
-      tap: false,
-      transform: false
-    }).on('dragleft dragright', $.bind(this.onCarousel, this));
-
-    this.parent = this.$el;
+    this.id = this.wrapper.id;
   };
 
   $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
+    getScrollType: function () {
+      return {
+        mouseWheel: false,
+        tap: true
+      };
+    },
     render: function (code) {
-      var self = this;
-      this.offset = 0;
-      this.parent.innerHTML = code;
-      this.$el = this.parent.firstElementChild;
+      this.wrapper.innerHTML = code;
+      this.$el = this.wrapper.firstElementChild;
       this.carousel = $('.carousel', this.$el);
-      $('.download-button', this.parent).index = this.index;
-      setTimeout(function () {
-        max = self.carousel.scrollWidth - self.carousel.clientWidth;
-        self.bottom = $.viewportHeight - self.$el.scrollHeight;
-      }, 10);
+      $('.download-button', this.wrapper).index = this.index;
+      this.prepare();
     },
     slideIn: function () {
-      this.parent.className = 'animated slideIn';
+      this.wrapper.className = 'wrapper animated slideIn';
       $.Panel.visiblePages.push(this);
-    },
-    slideOut: function () {
-      this.parent.className = 'animated slideOut';
-    },
-    onCarousel: function (event) {
-      var offset = this.carouselLeft - event.gesture.deltaX;
-      offset = offset > max ? max : offset;
-      offset = offset < 0 ? 0 : offset;
-      this.carousel.scrollLeft = offset;
-      event.stopPropagation();
-      event.preventDefault();
-      event.gesture.stopPropagation();
-      event.gesture.preventDefault();
-    },
-    onTouch: function () {
-      $.Panel.prototype.onTouch.call(this);
-      this.carouselLeft = this.carousel.scrollLeft;
     }
   });
 }());

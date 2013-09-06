@@ -85,18 +85,18 @@ header
       width: $width - 2px
       right: $gap - 4px
 
-.panel
+.wrapper
   position: absolute
   top: 60px
   left: 0
   right: 0
+  bottom: 0
   background: $white
-  padding: 10px
+
+#list-wrapper
+  z-index: 1
 
 #list
-  @extend .panel
-  z-index: 0
-  padding: 0
 
   &:after
     content: '继续上拉，加载更多广告'
@@ -255,9 +255,11 @@ header
     font: 30px/30px Arial
 
 #help
-  @extend .panel
-  font: 16px/25px Simhei
-  z-index: 2
+  z-index: 3
+
+  .container
+    font: 16px/25px Simhei
+    padding: 10px
 
   h3
     text-indent: 15px
@@ -318,9 +320,9 @@ header
     vertical-align: text-bottom
 
 #detail
-  @extend .panel
   bottom: 0
-  z-index: 1
+  padding: 10px
+  z-index: 2
 
   > div
     overflow-x: hidden

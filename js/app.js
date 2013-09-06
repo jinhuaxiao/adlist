@@ -24,13 +24,16 @@ document.addEventListener('DOMContentLoaded', function () {
       $.Panel.visiblePages.pop().slideOut();
     }
   }
+  function parentIfText(node) {
+    return 'tagName' in node ? node : node.parentNode;
+  }
 
   // 取页面高度
   $.viewportHeight = document.documentElement.clientHeight - 60;
 
   var detail = new $.DetailPanel('#detail'),
       list = new $.ListPanel({
-        el: '#list',
+        wrapper: '#list-wrapper',
         detail: detail
       }),
       help = new $.HelpPanel('#help'),
@@ -38,7 +41,28 @@ document.addEventListener('DOMContentLoaded', function () {
       lastURL = '';
   $.detect3DSupport(list.$el);
 
-  Hammer(document.body).on('tap', function (event) {
+  // header
+  var tapTimeout,
+      touch = {};
+  $('header').addEventListener('touchstart', function (event) {
+    touch.el = parentIfText(event.touches[0].target);
+    touch.x1 = event.touches[0].pageX;
+    touch.y1 = event.touches[0].pageY;
+    touch.last = Date.now();
+  }, false);
+  $('header').addEventListener('touchend', function (event) {
+    if (touch.last - Date.now() > 200) {
+      return;
+    }
+    tapTimeout = setTimeout(function () {
+      var evt = document.createEvent('CustomEvent');
+      evt.initEvent('tap', true, true);
+      touch.el.dispatchEvent(evt);
+      touch = {};
+    }, 0);
+  });
+
+  document.addEventListener('tap', function (event) {
     if ($.hasClass(event.target, 'help-button')) {
       help.slideIn();
     }
@@ -62,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       showDownloadPanel(target.index);
     }
-  });
+  }, false);
 
   document.body.addEventListener('downloadStart', showDownloadPanel);
 
@@ -72,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var template = $('script', list.$el).innerHTML;
     Handlebars.templates.list = Handlebars.compile(template);
 
-    template = $('script', detail.$el).innerHTML;
+    template = $('script', detail.wrapper).innerHTML;
     Handlebars.templates.detail = Handlebars.compile(template);
 
     // disabled img drag
@@ -89,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return false;
   });
   // for route
-  document.body.addEventListener('webkitAnimationEnd', function (event) {
+  document.addEventListener('webkitAnimationEnd', function (event) {
     if (event.animationName === 'slideIn') {
       location.hash = '#/' + event.target.id;
     } else if (event.animationName === 'slideUp') {
@@ -109,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 生成列表
   if (data && config.init) {
+    $('#money').innerHTML = data.money;
     list.render(Handlebars.templates.list(data));
   } else {
     list.prepare();
@@ -125,3 +150,4 @@ document.addEventListener('DOMContentLoaded', function () {
   ga('create', 'UA-35957679-7', 'dianjoy.com');
   ga('send', 'pageview');
 });
+document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);

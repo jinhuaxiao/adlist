@@ -30,14 +30,15 @@
       this.elements['comment'].disabled = true;
       this.elements['submit'].disabled = true;
       event.preventDefault();
-    });
+    }, false);
   };
 
   $.inherit(help, $.Panel);
-
   help.prototype.slideIn = function () {
     $.Panel.prototype.slideIn.call(this);
 
-    this.bottom = this.bottom ? this.bottom : ($.viewportHeight - this.$el.scrollHeight);
+    if (this.scroll.maxScrollY === 0) {
+      this.scroll.refresh();
+    }
   }
 }());

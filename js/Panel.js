@@ -10,7 +10,7 @@
 ;(function () {
   'use strict';
   function onAnimationEnd(event) {
-    this.className = event.animationName === 'slideOut' ? 'hide' : '';
+    this.className = event.animationName === 'slideOut' ? 'wrapper hide' : 'wrapper';
   }
 
   var Panel = $.Panel = function (options) {
@@ -22,64 +22,26 @@
     initialize: function (options) {
       if ($.isString(options)) {
         options = {
-          el: options
+          wrapper: options
         };
       }
-      var $el = this.$el = $(options.el);
-      Hammer($el, {
-        drag_block_vertical: true,
-        drag_lock_to_axis: true,
-        hold: false,
-        prevent_default: true,
-        prevent_mouseevents: true,
-        swipe: false,
-        transform: false
-      })
-        .on('dragup dragdown', $.bind(this.onDrag, this))
-        .on('touch', $.bind(this.onTouch, this))
-        .on('release', $.bind(this.onRelease, this));
-      $el.addEventListener('transitionend', this.onTransitionEnd, false);
-      $el.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
+      var wrapper = this.wrapper = $(options.wrapper);
+      this.$el = wrapper.firstElementChild;
+      this.scroll = new IScroll(wrapper, this.getScrollType());
+      wrapper.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
 
-      this.id = $el.id;
-      this.offset = 0;
+      this.id = this.wrapper.id;
     },
-    checkPosition: function (isDown, velocity) {
-      if (this.offset > 0 || this.offset < this.bottom) {
-        this.$el.className = 'autoback';
-        this.offset = isDown ? 0 : this.bottom;
-        this.setTransform(isDown ? 0 : this.bottom);
-      } else {
-        var offset = this.offset + (isDown ? 1 : -1) * velocity;
-        offset = offset > 0 ? 0 : offset;
-        offset = offset < this.bottom ? this.bottom : offset;
-        this.$el.className = 'momentum';
-        this.setTransform(offset);
-        this.offset = offset;
-      }
+    getScrollType: function () {
+      return {};
     },
     render: function (code) {
       this.$el.innerHTML = code;
-      var self = this;
-      setTimeout(function () {
-        self.bottom = $.viewportHeight - self.$el.scrollHeight;
-      }, 10);
+      this.prepare();
     },
-    setPanelOffset: function (offset) {
-      offset += this.offset;
-      this.tempOffset = offset;
-      if (offset > 0) {
-        offset *= 0.4;
-        offset = offset > 60 ? 60 : offset;
-      } else if (offset < this.bottom) {
-        offset = this.bottom + (offset - this.bottom) * 0.4;
-        offset = offset < this.bottom - 60 ? this.bottom - 60 : offset;
-      }
-     this.setTransform(offset);
-    },
-    setTransform: function (offset) {
-      this.$el.style.WebkitTransform = $.has3D ? "translate3d(0, " + offset + "px, 0) scale3d(1, 1, 1)"
-        : "translate(0, " + offset + ")";
+    prepare: function () {
+      this.wrapper.className = 'wrapper';
+      this.scroll.refresh();
     },
     showDownloadPanel: function (src) {
       var event = document.createEvent('CustomEvent');
@@ -87,30 +49,11 @@
       this.$el.dispatchEvent(event);
     },
     slideIn: function () {
-      this.$el.className = 'animated slideIn';
+      this.wrapper.className = 'wrapper animated slideIn';
       Panel.visiblePages.push(this);
     },
     slideOut: function () {
-      this.$el.className = 'animated slideOut';
-    },
-    onDrag: function (event) {
-      this.setPanelOffset(event.gesture.deltaY);
-      event.preventDefault();
-      event.gesture.preventDefault();
-    },
-    onRelease: function (event) {
-      this.offset = this.tempOffset || 0;
-      if (event.gesture.direction === Hammer.DIRECTION_DOWN
-          || event.gesture.direction === Hammer.DIRECTION_UP) {
-        this.checkPosition(event.gesture.direction === Hammer.DIRECTION_DOWN,
-            event.gesture.velocityY * 100);
-      }
-    },
-    onTouch: function () {
-      this.$el.className = '';
-    },
-    onTransitionEnd: function () {
-      this.className = ''
+      this.wrapper.className = 'wrapper animated slideOut';
     }
   };
 }());
