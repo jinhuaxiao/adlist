@@ -27,7 +27,6 @@
       }
       var wrapper = this.wrapper = $(options.wrapper);
       this.$el = wrapper.firstElementChild;
-      this.scroll = new IScroll(wrapper, this.getScrollType());
       wrapper.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
 
       this.id = this.wrapper.id;
@@ -41,12 +40,11 @@
     },
     prepare: function () {
       this.wrapper.className = 'wrapper';
-      this.scroll.refresh();
-    },
-    showDownloadPanel: function (src) {
-      var event = document.createEvent('CustomEvent');
-      event.initCustomEvent('downloadStart', true, false, {src: src});
-      this.$el.dispatchEvent(event);
+      if (this.scroll) {
+        this.scroll.refresh();
+      } else {
+        this.scroll = new IScroll(this.wrapper, this.getScrollType());
+      }
     },
     slideIn: function () {
       this.wrapper.className = 'wrapper animated slideIn';

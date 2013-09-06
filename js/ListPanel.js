@@ -58,8 +58,6 @@
 
     this.detail = options.detail;
 
-    this.scroll.on('scroll', loadIcons);
-
     this.$el.addEventListener('tap', $.bind(function (event) {
       var target = event.target;
       if (target.id === 'list') {
@@ -95,6 +93,18 @@
         probeType: 3
       };
     },
+    prepare: function () {
+      this.wrapper.className = 'wrapper';
+      if (this.scroll) {
+        this.scroll.refresh();
+      } else {
+        this.scroll = new IScroll(this.wrapper, this.getScrollType());
+        this.scroll.on('scroll', $.bind(this.checkPosition, this));
+        this.scroll.on('scrollEnd', $.bind(this.scrollEndHandler, this));
+      }
+      images = this.$el.getElementsByClassName('pre');
+      loadIcons();
+    },
     append: function (code) {
       var fragment = document.createDocumentFragment(),
           div = document.createElement('div'),
@@ -107,6 +117,15 @@
       }
       this.$el.appendChild(fragment);
       this.prepare();
+    },
+    checkPosition: function () {
+      loadIcons();
+
+      if (this.scroll.y < (this.scroll.maxScrollY - 5) && !this.$el.className.match('flip')) {
+        this.$el.className = 'flip';
+      } else if (this.scroll.y > (this.scroll.maxScrollY + 5) && this.$el.className.match('flip')) {
+        this.$el.className = '';
+      }
     },
     loadNextPage: function () {
       this.loadPage(pn + 1);
@@ -128,11 +147,6 @@
         success: this.remote_successHandler,
         error: this.remote_errorHandler
       });
-    },
-    prepare: function () {
-      $.Panel.prototype.prepare.call(this);
-      images = this.$el.getElementsByClassName('pre');
-      loadIcons();
     },
     refresh: function () {
       this.loadPage(1, true);
@@ -157,6 +171,14 @@
         this.append(Handlebars.templates.list(more));
         data.offers = data.offers.concat(more.offers);
         this.$el.className = '';
+      }
+    },
+    scrollEndHandler: function () {
+      if (pullUpEl.className.match('flip')) {
+        pullUpEl.className = 'loading';
+        pullUpEl.querySelector('.label').innerHTML = '加载中...';
+        pullUpAction();
+        timeout = setTimeout(clearLoading, 60000);
       }
     }
   });

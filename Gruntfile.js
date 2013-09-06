@@ -56,7 +56,7 @@ module.exports = function (grunt) {
         separator: ';'
       },
       libs: {
-        src: ['js/libs/iscroll-probe.min.js', 'js/libs/handlebars.runtime.js'],
+        src: ['js/libs/iscroll-probe.js', 'js/libs/handlebars.runtime.js'],
         dest: temp + 'js/libs.js'
       },
       apps: {

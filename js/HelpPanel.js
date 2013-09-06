@@ -37,8 +37,8 @@
   help.prototype.slideIn = function () {
     $.Panel.prototype.slideIn.call(this);
 
-    if (this.scroll.maxScrollY === 0) {
-      this.scroll.refresh();
+    if (!this.scroll) {
+      this.scroll = new IScroll(this.wrapper);
     }
   }
 }());

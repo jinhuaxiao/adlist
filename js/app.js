@@ -41,9 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
       lastURL = '';
   $.detect3DSupport(list.$el);
 
-  // header
-  var tapTimeout,
-      touch = {};
+  //
+  var touch = {};
   $('header').addEventListener('touchstart', function (event) {
     touch.el = parentIfText(event.touches[0].target);
     touch.x1 = event.touches[0].pageX;
@@ -51,17 +50,16 @@ document.addEventListener('DOMContentLoaded', function () {
     touch.last = Date.now();
   }, false);
   $('header').addEventListener('touchend', function (event) {
-    if (touch.last - Date.now() > 200) {
+    if (touch.last - Date.now() > 200 || event.touches.length > 0 && touch.el !== event.touches[0].target) {
       return;
     }
-    tapTimeout = setTimeout(function () {
+    setTimeout(function () {
       var evt = document.createEvent('CustomEvent');
       evt.initEvent('tap', true, true);
       touch.el.dispatchEvent(evt);
       touch = {};
     }, 0);
   });
-
   document.addEventListener('tap', function (event) {
     if ($.hasClass(event.target, 'help-button')) {
       help.slideIn();
@@ -87,8 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
       showDownloadPanel(target.index);
     }
   }, false);
-
-  document.body.addEventListener('downloadStart', showDownloadPanel);
+  document.addEventListener('downloadStart', showDownloadPanel);
 
   // 调试环境下，从页面中取模版
   if (DEBUG) {
@@ -150,4 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
   ga('create', 'UA-35957679-7', 'dianjoy.com');
   ga('send', 'pageview');
 });
+
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
+window.devicePixelRatio = window.devicePixelRatio || 1;
