@@ -7,7 +7,8 @@
  */
 ;(function () {
   'use strict';
-  var REMOTE = /dianjoy\.com/i.test(location.hostname) ? '' : 'http://a.dianjoy.com/dev/api/adlist/adlist.php';
+  var timeout = 0,
+      REMOTE = /dianjoy\.com/i.test(location.hostname) ? '' : 'http://a.dianjoy.com/dev/api/adlist/adlist.php';
 
   function getParams(string) {
     var arr = string.substr(string.indexOf('?') + 1).split('&'),
@@ -25,12 +26,12 @@
     result.output = 'JSON';
     return result;
   }
-  function loadIcons() {
+  function loadIcons(y) {
     // 加载图片
     var i = 0,
-      len = images.length,
-      top = $.viewportHeight - (this instanceof IScroll ? this.y : 0),
-      img;
+        len = images.length,
+        top = $.viewportHeight - y,
+        img;
     while (i < len) {
       img = images[i];
       if (top > img.offsetTop) {
@@ -60,7 +61,7 @@
 
     this.$el.addEventListener('tap', $.bind(function (event) {
       var target = event.target;
-      if (target.id === 'list') {
+      if (target.id === 'list' || $.Panel.visiblePages.indexOf(this.detail) !== -1) {
         return;
       }
       while (target.className !== 'item') {
@@ -89,7 +90,6 @@
     getScrollType: function () {
       return {
         mouseWheel: false,
-        tap: true,
         probeType: 3
       };
     },
@@ -99,11 +99,11 @@
         this.scroll.refresh();
       } else {
         this.scroll = new IScroll(this.wrapper, this.getScrollType());
-        this.scroll.on('scroll', $.bind(this.checkPosition, this));
+        this.scroll.on('scroll', $.bind(this.scrollHandler, this));
         this.scroll.on('scrollEnd', $.bind(this.scrollEndHandler, this));
       }
       images = this.$el.getElementsByClassName('pre');
-      loadIcons();
+      loadIcons(this.scroll.y);
     },
     append: function (code) {
       var fragment = document.createDocumentFragment(),
@@ -119,11 +119,11 @@
       this.prepare();
     },
     checkPosition: function () {
-      loadIcons();
+      loadIcons(this.scroll.y);
 
-      if (this.scroll.y < (this.scroll.maxScrollY - 5) && !this.$el.className.match('flip')) {
-        this.$el.className = 'flip';
-      } else if (this.scroll.y > (this.scroll.maxScrollY + 5) && this.$el.className.match('flip')) {
+      if (this.scroll.y < this.scroll.maxScrollY - 5) {
+        this.$el.className = 'more';
+      } else if (this.scroll.y > this.scroll.maxScrollY + 5) {
         this.$el.className = '';
       }
     },
@@ -151,16 +151,19 @@
     refresh: function () {
       this.loadPage(1, true);
     },
+    stopLoading: function () {
+      this.$el.className = 'error';
+      isLoading = false;
+    },
     remote_errorHandler: function () {
+      this.$el.className = 'error';
       isLoading = false;
     },
     remote_successHandler: function (more) {
       isLoading = false;
       pn = more.pn || 1;
       if (!more || !more.hasOwnProperty('offers') || !more.offers || more.offers.length === 0) {
-        this.$el.className = 'no-more delay autoback';
-        this.offset = this.bottom;
-        this.setTransform(this.bottom);
+        this.$el.className = 'no-more';
         return;
       }
       if (this.isRefresh) {
@@ -170,16 +173,21 @@
       } else {
         this.append(Handlebars.templates.list(more));
         data.offers = data.offers.concat(more.offers);
-        this.$el.className = '';
       }
+      this.$el.className = '';
     },
     scrollEndHandler: function () {
-      if (pullUpEl.className.match('flip')) {
-        pullUpEl.className = 'loading';
-        pullUpEl.querySelector('.label').innerHTML = '加载中...';
-        pullUpAction();
-        timeout = setTimeout(clearLoading, 60000);
+      if (this.$el.className === 'more') {
+        this.$el.className = 'loading';
+        this.loadNextPage();
+        var self = this;
+        timeout = setTimeout(function () {
+          self.stopLoading();
+        }, 60000);
       }
+    },
+    scrollHandler: function () {
+      this.checkPosition();
     }
   });
 }());

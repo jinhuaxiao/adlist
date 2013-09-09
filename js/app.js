@@ -41,25 +41,24 @@ document.addEventListener('DOMContentLoaded', function () {
       lastURL = '';
   $.detect3DSupport(list.$el);
 
-  //
   var touch = {};
-  $('header').addEventListener('touchstart', function (event) {
+  document.addEventListener('touchstart', function (event) {
     touch.el = parentIfText(event.touches[0].target);
     touch.x1 = event.touches[0].pageX;
     touch.y1 = event.touches[0].pageY;
     touch.last = Date.now();
+    event.preventDefault();
   }, false);
-  $('header').addEventListener('touchend', function (event) {
-    if (touch.last - Date.now() > 200 || event.touches.length > 0 && touch.el !== event.touches[0].target) {
+  document.addEventListener('touchend', function (event) {
+    if (Date.now() - touch.last > 200 || event.touches.length > 0 && touch.el !== event.touches[0].target) {
       return;
     }
-    setTimeout(function () {
-      var evt = document.createEvent('CustomEvent');
-      evt.initEvent('tap', true, true);
-      touch.el.dispatchEvent(evt);
-      touch = {};
-    }, 0);
-  });
+
+    var evt = document.createEvent('Event');
+    evt.initEvent('tap', true, true);
+    touch.el.dispatchEvent(evt);
+    touch = {};
+  }, false);
   document.addEventListener('tap', function (event) {
     if ($.hasClass(event.target, 'help-button')) {
       help.slideIn();
@@ -85,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
       showDownloadPanel(target.index);
     }
   }, false);
-  document.addEventListener('downloadStart', showDownloadPanel);
+  document.addEventListener('downloadStart', showDownloadPanel, false);
 
   // 调试环境下，从页面中取模版
   if (DEBUG) {
@@ -95,20 +94,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     template = $('script', detail.wrapper).innerHTML;
     Handlebars.templates.detail = Handlebars.compile(template);
-
-    // disabled img drag
-    document.body.addEventListener('dragstart', function (event) {
-      if (event.target.tagName.toLowerCase() === 'img') {
-        event.preventDefault();
-        return false;
-      }
-    });
   }
+
   // disabled click event for back-button
   $('.back-button').addEventListener('click', function (event) {
     event.preventDefault();
     return false;
-  });
+  }, false);
   // for route
   document.addEventListener('webkitAnimationEnd', function (event) {
     if (event.animationName === 'slideIn') {
@@ -116,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (event.animationName === 'slideUp') {
       event.target.className = 'hide';
     }
-  });
+  }, false);
 
   if (hasHashchange) {
     window.addEventListener('hashchange', function () {
@@ -124,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
       lastURL = location.hash.substr(2);
 
       $('.help-button').className = (lastURL === 'help' ? 'hide' : '') + ' help-button';
-    });
+    }, false);
   }
 
 
@@ -148,5 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
   ga('send', 'pageview');
 });
 
+document.addEventListener('dragstart', function (event) { event.preventDefault(); }, false);
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 window.devicePixelRatio = window.devicePixelRatio || 1;

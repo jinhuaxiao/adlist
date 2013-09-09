@@ -12,6 +12,9 @@
     $.Panel.call(this, options);
 
     $('#comments', this.$el).addEventListener('submit', function (event) {
+      if (this.elements.comment.value === '') {
+        return false;
+      }
       $.ajax({
         url: this.action,
         method: this.method,
@@ -20,15 +23,15 @@
           deviceid: config.deviceid,
           channel: config.channel,
           net: config.net,
-          comment: this.elements['comment'].value
+          comment: this.elements.comment.value
         },
         context: this,
         success: function () {
-          this.elements['submit'].innerHTML = '提交成功';
+          this.elements.submit.innerHTML = '提交成功';
         }
       });
-      this.elements['comment'].disabled = true;
-      this.elements['submit'].disabled = true;
+      this.elements.comment.disabled = true;
+      this.elements.submit.disabled = true;
       event.preventDefault();
     }, false);
   };

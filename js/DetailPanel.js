@@ -19,8 +19,6 @@
     offset = offset > touch.max ? touch.max : offset;
     offset = offset < 0 ? 0 : offset;
     this.scrollLeft = offset;
-    //event.stopPropagation();
-    //event.preventDefault();
   }
   function cancelCarousel() {
     this.removeEventListener('touchmove', moveCarousel);
@@ -38,12 +36,6 @@
   $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
-    getScrollType: function () {
-      return {
-        mouseWheel: false,
-        tap: true
-      };
-    },
     prepare: function () {
       this.wrapper.className = 'wrapper';
       if (this.scroll) {

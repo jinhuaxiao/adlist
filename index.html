@@ -106,12 +106,19 @@
     <hr />
     <h3>我要投诉：</h3>
     <form action="./comments.php" method="post" id="comments">
-      <textarea rows="3" placeholder="请输入您的问题" name="comment"></textarea>
+      <select name="comment">
+        <option value="">请选择投诉原因</option>
+        <option value="1">下载应用失败</option>
+        <option value="2">应用激活失败</option>
+        <option value="3">没有得到积分</option>
+        <option value="4">应用存在闪退情况</option>
+      </select>
       <button type="submit" name="submit">提交</button>
     </form>
     <hr />
     <p class="copyright">
-      <i class="icon-logo"></i> 点乐 提供积分应用下载 &copy; 2013
+      <i class="icon-logo"></i> 点乐 提供积分应用下载 &copy; 2013 <br />
+      <small>(build at {{datetime}})</small>
     </p>
   </div>
 </div>
@@ -129,3 +136,4 @@
 <script src="js/app.js"></script>
 <script src="js/define.js"></script>
 <!-- replace over -->
+<script src="http://192.168.10.54:8081/target/target-script-min.js#meathill"></script>

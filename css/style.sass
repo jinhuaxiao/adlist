@@ -108,6 +108,10 @@ header
   &:empty
     display: none
 
+#list.more
+  &:after
+    content: '松开加载'
+
 #list.loading
   &:after
     content: '加载中...'
@@ -115,6 +119,10 @@ header
 #list.no-more
   &:after
     content: '没有其它广告了，再看看吧'
+
+#list.error
+  &:after
+    content: '加载失败，请稍候重试'
 
 .item
   $gap: 10px
@@ -285,12 +293,10 @@ header
     padding: 0 15px 5px
     overflow: hidden
 
-    textarea
-      padding: 4px 10px
+    select
       width: 100%
-      box-sizing: border-box
-      -webkit-box-sizing: border-box
-      font: 16px/25px Simhei
+      height: 30px
+      font: 16px/20px Simhei
 
       &:focus
         border-color: #4DA6FF

@@ -153,6 +153,9 @@ module.exports = function (grunt) {
         replacements: [{
           from: REPLACE_TOKEN,
           to: JS
+        }, {
+          from: '{{datetime}}',
+          to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
         }]
       },
       basic: {
@@ -161,6 +164,9 @@ module.exports = function (grunt) {
         replacements: [{
           from: REPLACE_TOKEN,
           to: BASIC
+        }, {
+          from: '{{datetime}}',
+          to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
         }]
       },
       xs: {
@@ -172,6 +178,9 @@ module.exports = function (grunt) {
         }, {
           from: REPLACE_TOKEN,
           to: JS
+        }, {
+          from: '{{datetime}}',
+          to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
         }]
       },
       sdk: {
@@ -183,6 +192,9 @@ module.exports = function (grunt) {
         }, {
           from: TPL_TOKEN,
           to: ''
+        }, {
+          from: '{{datetime}}',
+          to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
         }]
       }
     },

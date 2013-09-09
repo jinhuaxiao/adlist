@@ -61,12 +61,13 @@
   };
   $.bind = function (func, context) {
     var args,
+        bound,
         native = Function.prototype.bind;
     if (native && func.bind === native) {
       return native.apply(func, slice.call(arguments, 1));
     }
     args = slice.call(arguments, 2);
-    return function() {
+    return bound = function() {
       if (!(this instanceof bound)) {
         return func.apply(context, args.concat(slice.call(arguments)));
       }

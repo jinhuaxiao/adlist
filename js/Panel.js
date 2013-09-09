@@ -47,6 +47,9 @@
       }
     },
     slideIn: function () {
+      if (Panel.visiblePages.indexOf(this) !== -1) {
+        return;
+      }
       this.wrapper.className = 'wrapper animated slideIn';
       Panel.visiblePages.push(this);
     },
