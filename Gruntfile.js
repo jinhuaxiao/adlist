@@ -13,7 +13,8 @@ module.exports = function (grunt) {
       BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
       SDK_JS = '<script src="data.js"></script>',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/,
-      TPL_TOKEN = /{{#(\w+)}}[\S\s]+{{\/\1}}/gm;
+      TPL_TOKEN = /{{#(\w+)}}[\S\s]+{{\/\1}}/gm,
+      HEADER_TOKEN = '<!-- header -->';
 
   function convertToMustache(str) {
     var stack = [],
@@ -170,8 +171,14 @@ module.exports = function (grunt) {
         src: [temp + 'index.html'],
         dest: build + 'templates/template.html',
         replacements: [{
+          from: HEADER_TOKEN,
+          to: grunt.file.read('add-ons/header.html')
+        }, {
           from: REPLACE_TOKEN,
           to: JS
+        }, {
+          from: '"list-wrapper" class="wrapper hide"',
+          to: '"list-wrapper" class="wrapper"'
         }, {
           from: '{{datetime}}',
           to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
@@ -181,8 +188,14 @@ module.exports = function (grunt) {
         src: [temp + 'index.html'],
         dest: build + 'templates/template-basic.html',
         replacements: [{
+          from: HEADER_TOKEN,
+          to: grunt.file.read('add-ons/header.html')
+        },{
           from: REPLACE_TOKEN,
           to: BASIC
+        }, {
+          from: '"list-wrapper" class="wrapper hide"',
+          to: '"list-wrapper" class="wrapper"'
         }, {
           from: '{{datetime}}',
           to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
@@ -222,6 +235,9 @@ module.exports = function (grunt) {
         replacements: [{
           from: REPLACE_TOKEN,
           to: EN
+        }, {
+          from: '"list-wrapper" class="wrapper hide"',
+          to: '"list-wrapper" class="wrapper"'
         }, {
           from: 'style.css',
           to: 'style-en.css'
