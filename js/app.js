@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
       if (!/dianjoy\.com/i.test(target.href)) {
-        var index = location.origin.length + location.pathname.lastIndexOf('/') + 1;
+        var index = location.href.lastIndexOf('/') + 1;
         target.href = 'http://a.dianjoy.com/dev/api/adlist/' + target.href.substr(index);
       }
       showDownloadPanel(target.index);

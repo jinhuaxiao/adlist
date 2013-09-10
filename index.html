@@ -3,12 +3,14 @@
 <meta charset="utf-8" />
 <meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <link rel="stylesheet" href="css/style.css" />
+{{#show_all_money}}
 <style>
   header .diamond,
   #money {
-    {{show_all_money}}: none;
+    display: none;
   }
 </style>
+{{/show_all_money}}
 
 <header>
   <a href="dianjoy:return" class="back-button">&nbsp;</a>
@@ -17,7 +19,7 @@
   <a href="#/help" class="help-button">帮助</a>
 </header>
 <div id="list-wrapper" class="wrapper hide">
-  <div id="list">
+  <div id="list" data-normal="继续上拉，加载更多广告" data-more="松开加载" data-loading="加载中..." data-no-more="没有其它广告了，再看看吧" data-error="加载失败，请稍候重试" data-over="">
     <script type="text/handlebars-template">
       {{#each offers}}
       <div class="item">

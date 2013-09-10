@@ -218,7 +218,7 @@ module.exports = function (grunt) {
       },
       en: {
         src: [temp + 'index-en.html'],
-        dest: build + 'templates/templates-en.html',
+        dest: build + 'templates/template-en.html',
         replacements: [{
           from: REPLACE_TOKEN,
           to: EN

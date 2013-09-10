@@ -100,7 +100,7 @@ header
 #list
 
   &:after
-    content: '继续上拉，加载更多广告'
+    content: attr(data-normal)
     display: block
     font: 14px/60px Simhei
     text-align: center
@@ -109,21 +109,25 @@ header
   &:empty
     display: none
 
+#list.over
+  &:after
+    content: attr(data-over)
+
 #list.more
   &:after
-    content: '松开加载'
+    content: attr(data-more)
 
 #list.loading
   &:after
-    content: '加载中...'
+    content: attr(data-loading)
 
 #list.no-more
   &:after
-    content: '没有其它广告了，再看看吧'
+    content: attr(data-no-more)
 
 #list.error
   &:after
-    content: '加载失败，请稍候重试'
+    content: attr(data-error)
 
 .item
   $gap: 10px

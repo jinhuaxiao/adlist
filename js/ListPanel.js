@@ -104,8 +104,12 @@
         this.scroll.refresh();
       } else {
         this.scroll = new IScroll(this.wrapper, this.getScrollType());
-        this.scroll.on('scroll', $.bind(this.scrollHandler, this));
-        this.scroll.on('scrollEnd', $.bind(this.scrollEndHandler, this));
+        if (this.scroll.maxScrollY > 0) {
+          this.scroll.on('scroll', $.bind(this.scrollHandler, this));
+          this.scroll.on('scrollEnd', $.bind(this.scrollEndHandler, this));
+        } else {
+          this.$el.className = 'over';
+        }
       }
       images = this.$el.getElementsByClassName('pre');
       loadIcons(this.scroll.y);
