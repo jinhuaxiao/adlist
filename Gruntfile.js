@@ -9,6 +9,7 @@ module.exports = function (grunt) {
   var build = 'build/',
       temp = 'temp/',
       JS = '<script src="js/app.min.js"></script>',
+      EN = '<script src="js/app-en.min.js"></script>',
       BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
       SDK_JS = '<script src="data.js"></script>',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/,
@@ -49,7 +50,7 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     clean: {
       start: [build],
-      end: [temp, build + 'index.html']
+      end: [temp, build + 'index.html', build + 'index-en.html']
     },
     concat: {
       options: {
@@ -66,6 +67,10 @@ module.exports = function (grunt) {
       basic: {
         src: [temp + 'js/templates-basic.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
         dest: temp + 'js/basic.js'
+      },
+      en: {
+        src: [temp + 'js/templates-en.js', 'js/dollar.js', 'js/Panel.js', 'js/ListPanel.js', 'js/app-en.js'],
+        dest: temp + 'js/app-en.js'
       }
     },
     uglify: {
@@ -82,7 +87,8 @@ module.exports = function (grunt) {
       build: {
         files: [
           {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + 'js/app.min.js'},
-          {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + 'js/basic.min.js'}
+          {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + 'js/basic.min.js'},
+          {src: [temp + 'js/libs.js', temp + 'js/app-en.js'], dest: build + 'js/app-en.min.js'}
         ]
       }
     },
@@ -93,7 +99,8 @@ module.exports = function (grunt) {
       minify: {
         files: [
           {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'},
-          {src: ['css/style.css', 'css/xs.css', 'css/animate.css'], dest: build + 'css/xs.css'}
+          {src: ['css/style.css', 'css/xs.css', 'css/animate.css'], dest: build + 'css/xs.css'},
+          {src: ['css/style.css'], dest: build + 'css/style-en.css'}
         ]
       }
     },
@@ -108,6 +115,17 @@ module.exports = function (grunt) {
         isSDK: true,
         dest: build + 'index.html',
         names: ['list', 'detail']
+      },
+      en: {
+        src: 'index-en.html',
+        dest: temp + 'index-en.html',
+        names: ['list']
+      },
+      ensdk: {
+        src: 'index-en.html',
+        isSDK: true,
+        dest: build + 'index-en.html',
+        names: ['list']
       }
     },
     handlebars: {
@@ -129,7 +147,8 @@ module.exports = function (grunt) {
         },
         files: [
           {src: temp + 'templates/*.html', dest: temp + 'js/templates.js'},
-          {src: temp + 'templates/*-basic.html', dest: temp + 'js/templates-basic.js'}
+          {src: temp + 'templates/*-basic.html', dest: temp + 'js/templates-basic.js'},
+          {src: temp + 'templates/list.html', dest: temp + 'js/templates-en.js'}
         ]
       }
     },
@@ -196,6 +215,31 @@ module.exports = function (grunt) {
           from: '{{datetime}}',
           to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
         }]
+      },
+      en: {
+        src: [temp + 'index-en.html'],
+        dest: build + 'templates/templates-en.html',
+        replacements: [{
+          from: REPLACE_TOKEN,
+          to: EN
+        }, {
+          from: 'style.css',
+          to: 'style-en.css'
+        }]
+      },
+      ensdk: {
+        src: [build + 'index-en.html'],
+        overwrite: true,
+        replacements: [{
+          from: REPLACE_TOKEN,
+          to: EN
+        }, {
+          from: TPL_TOKEN,
+          to: ''
+        }, {
+          from: 'style.css',
+          to: 'style-en.css'
+        }]
       }
     },
     compress: {
@@ -205,11 +249,20 @@ module.exports = function (grunt) {
           mode: 'zip',
           pretty: true
         },
-        files: [
-          {src: [build + '**'], dest: '..', filter: function (filename) {
-            return filename.indexOf('/templates/') === -1 && filename.slice(-4) !== '.zip';
-          }}
-        ]
+        files: [{
+          src: [build + 'index.html', build + 'css/style.css', build + 'js/app.min.js', build + 'img/*'],
+          dest: '..'}]
+      },
+      en: {
+        options: {
+          archive: build + 'sdk-en.zip',
+          mode: 'zip',
+          pretty: true
+        },
+        files: [{
+          src: [build + 'index-en.html', build + 'css/style-en.css', build + 'js/app-en.min.js', build + 'img/*'],
+          dest: '..'
+        }]
       }
     }
   });

@@ -76,11 +76,15 @@
         return;
       }
 
-      var item = data.offers[index];
-      item.serv = data.serv;
-      this.detail.index = index;
-      this.detail.render(Handlebars.templates.detail(item));
-      this.detail.slideIn();
+      if (this.detail) {
+        var item = data.offers[index];
+        item.serv = data.serv;
+        this.detail.index = index;
+        this.detail.render(Handlebars.templates.detail(item));
+        this.detail.slideIn();
+      } else {
+        location.href = $('a', target).href;
+      }
     }, this), false);
   };
 
@@ -90,6 +94,7 @@
     getScrollType: function () {
       return {
         mouseWheel: false,
+        tap: true,
         probeType: 3
       };
     },

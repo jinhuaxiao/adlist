@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<title>Dianjoy Features</title>
+<meta charset="utf-8" />
+<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<link rel="stylesheet" href="css/style.css" />
+
+<header>
+  <a href="dianjoy:return" class="back-button">&nbsp;</a>
+  <i class="diamond"></i>
+  <span id="money">{{money}}</span>
+</header>
+<div id="list-wrapper" class="wrapper hide">
+  <div id="list">
+    <script type="text/handlebars-template">
+      {{#each offers}}
+      <div class="item">
+        <img src="data:image/gif;base64,R0lGODlhAQABAJEAAAAAAP///////wAAACH5BAEHAAIALAAAAAABAAEAAAICVAEAOw==" s="{{../serv}}{{icon}}" width="50" height="50" class="item-icon pre" />
+        <div class="desc">
+          <h2>{{name}}<small>{{size}}</small></h2>
+          <p>{{text}}</p>
+        </div>
+        {{#if notInstalled}}
+        <a class="download-button {{#if is_reg}}reg{{/if}} {{#if is_task}}task{{/if}}" href="{{download}}">
+          {{cate}}
+          <div>+{{number}}</div>
+        </a>
+        {{else}}
+        <a class="installed" href="{{download}}">
+          Installed
+        </a>
+        {{/if}}
+      </div>
+      {{/each}}
+    </script>
+  </div>
+</div>
+
+
+<!-- replace start -->
+<script src="js/libs/iscroll-probe.js"></script>
+<script src="js/libs/handlebars.js"></script>
+<script src="js/dollar.js"></script>
+<script src="js/Panel.js"></script>
+<script src="js/ListPanel.js"></script>
+<script src="js/app-en.js"></script>
+<script src="js/define.js"></script>
+<!-- replace over -->
