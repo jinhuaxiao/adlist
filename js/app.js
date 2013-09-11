@@ -85,14 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($.hasClass(event.target, 'download-button')
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
-      if (!/dianjoy\.com/i.test(target.href)) {
-        var index = location.href.lastIndexOf('/') + 1;
-        target.href = 'http://a.dianjoy.com/dev/api/adlist/' + target.href.substr(index);
-      }
       showDownloadPanel(target.index);
     }
   }, false);
-  document.addEventListener('downloadStart', showDownloadPanel, false);
 
   // 调试环境下，从页面中取模版
   if (DEBUG) {

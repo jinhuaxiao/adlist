@@ -14,6 +14,7 @@ module.exports = function (grunt) {
       SDK_JS = '<script src="data.js"></script>',
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/,
       TPL_TOKEN = /{{#(\w+)}}[\S\s]+{{\/\1}}/gm,
+      SERV = 'http://a.dianjoy.com/dev/api/adlist/',
       HEADER_TOKEN = '<!-- header -->';
 
   function convertToMustache(str) {
@@ -69,9 +70,17 @@ module.exports = function (grunt) {
         src: [temp + 'js/templates-basic.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
         dest: temp + 'js/basic.js'
       },
+      sdk: {
+        src: [temp + 'js/templates-sdk.js', 'js/dollar.js', 'js/Panel.js', 'js/DetailPanel.js', 'js/HelpPanel.js', 'js/ListPanel.js', 'js/app.js'],
+        dest: temp + 'js/app-sdk.js'
+      },
       en: {
         src: [temp + 'js/templates-en.js', 'js/dollar.js', 'js/Panel.js', 'js/ListPanel.js', 'js/app-en.js'],
         dest: temp + 'js/app-en.js'
+      },
+      ensdk: {
+        src: [temp + 'js/templates-en-sdk.js', 'js/dollar.js', 'js/Panel.js', 'js/ListPanel.js', 'js/app-en.js'],
+        dest: temp + 'js/app-en-sdk.js'
       }
     },
     uglify: {
@@ -85,11 +94,17 @@ module.exports = function (grunt) {
         },
         report: 'gzip'
       },
-      build: {
+      web: {
         files: [
           {src: [temp + 'js/libs.js', temp + 'js/app.js'], dest: build + 'js/app.min.js'},
           {src: [temp + 'js/libs.js', temp + 'js/basic.js'], dest: build + 'js/basic.min.js'},
           {src: [temp + 'js/libs.js', temp + 'js/app-en.js'], dest: build + 'js/app-en.min.js'}
+        ]
+      },
+      sdk: {
+        files: [
+          {src: [temp + 'js/libs.js', temp + 'js/app-sdk.js'], dest: build + 'js/app.min.js'},
+          {src: [temp + 'js/libs.js', temp + 'js/app-en-sdk.js'], dest: build + 'js/app-en.min.js'}
         ]
       }
     },
@@ -120,13 +135,13 @@ module.exports = function (grunt) {
       en: {
         src: 'index-en.html',
         dest: temp + 'index-en.html',
-        names: ['list']
+        names: ['list-en']
       },
       ensdk: {
         src: 'index-en.html',
         isSDK: true,
         dest: build + 'index-en.html',
-        names: ['list']
+        names: ['list-en']
       }
     },
     handlebars: {
@@ -141,15 +156,40 @@ module.exports = function (grunt) {
             },
             knownHelpersOnly: true
           },
-          processName: function(filename) {
-            var isBasic = filename.indexOf('-basic') !== -1;
-            return filename.substring(filename.lastIndexOf('/') + 1, filename.lastIndexOf(isBasic ? '-basic' : '.'));
+          processName: function (filename) {
+            return filename.match(/detail|list/)[0];
+          },
+          processContent: function (content) {
+            content = content.replace(/^[\x20\t]+/mg, '').replace(/[\x20\t]+$/mg, '');
+            content = content.replace(/[\r\n]/g, '');
+            content = content.replace(/\s{2,}/g, '\s');
+            return content;
           }
         },
         files: [
-          {src: temp + 'templates/*.html', dest: temp + 'js/templates.js'},
-          {src: temp + 'templates/*-basic.html', dest: temp + 'js/templates-basic.js'},
-          {src: temp + 'templates/list.html', dest: temp + 'js/templates-en.js'}
+          {
+            src: [
+              temp + 'templates/list.html',
+              temp + 'templates/detail.html'
+            ],
+            dest: temp + 'js/templates.js'
+          },
+          {
+            src: [
+              temp + 'templates/list-basic.html',
+              temp + 'templates/detail-basic.html'
+            ],
+            dest: temp + 'js/templates-basic.js'
+          },
+          {
+            src: [
+              temp + 'templates/list-sdk.html',
+              temp + 'templates/detail-sdk.html'
+            ],
+            dest: temp + 'js/templates-sdk.js'
+          },
+          {src: temp + 'templates/list-en.html', dest: temp + 'js/templates-en.js'},
+          {src: temp + 'templates/list-en-sdk.html', dest: temp + 'js/templates-en-sdk.js'}
         ]
       }
     },
@@ -292,13 +332,17 @@ module.exports = function (grunt) {
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
     content = content.replace(REG, function (match, template) {
+      var part = names[index];
+      if (isSDK) {
+        part += '-sdk';
+        template = template.replace(/\{\{download\}\}/g, SERV + '{{download}}');
+      }
       var basic = template.replace(/<img .*\/>/, ''),
-          part = names[index];
       basic = basic.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
       grunt.file.write(temp + 'templates/' + part + '.html', template);
       grunt.file.write(temp + 'templates/' + part + '-basic.html', basic);
       index++;
-      return (!isSDK && part === 'list') ? convertToMustache(template) : '';
+      return (!isSDK && /list/.test(part)) ? convertToMustache(template) : '';
     });
     if (isSDK) {
       content = content + SDK_JS;
@@ -317,6 +361,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
-  grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify', 'cssmin', 'copy', 'compress', 'clean:end']);
-  grunt.registerTask('debug', ['extract:web']);
+  grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify:sdk', 'cssmin', 'copy', 'compress', 'uglify:web', 'clean:end']);
+  grunt.registerTask('debug', ['clean', 'extract', 'handlebars']);
 }

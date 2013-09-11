@@ -59,7 +59,7 @@
         touch.max = carousel.scrollWidth - carousel.clientWidth;
       }, 10);
 
-      $('.download-button', this.wrapper).index = this.index;
+      $('a', this.wrapper).index = this.index;
       this.prepare();
     }
   });
