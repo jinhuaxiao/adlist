@@ -36,6 +36,12 @@
   $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
+    getScrollType: function () {
+      return {
+        mouseWheel: false,
+        tap: true
+      };
+    },
     prepare: function () {
       this.wrapper.className = 'wrapper';
       if (this.scroll) {

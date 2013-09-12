@@ -67,6 +67,10 @@
       while (target.className !== 'item') {
         target = target.parentNode;
       }
+      if (!this.detail) {
+        location.href = $('a', target).href;
+        return;
+      }
       var index = Array.prototype.indexOf.call(this.$el.children, target);
       if ($.hasClass(event.target, 'download-button')
           || $.hasClass(event.target.parentNode, 'download-button')) {
@@ -76,15 +80,11 @@
         return;
       }
 
-      if (this.detail) {
-        var item = data.offers[index];
-        item.serv = data.serv;
-        this.detail.index = index;
-        this.detail.render(Handlebars.templates.detail(item));
-        this.detail.slideIn();
-      } else {
-        location.href = $('a', target).href;
-      }
+      var item = data.offers[index];
+      item.serv = data.serv;
+      this.detail.index = index;
+      this.detail.render(Handlebars.templates.detail(item));
+      this.detail.slideIn();
     }, this), false);
   };
 

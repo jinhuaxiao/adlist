@@ -154,7 +154,7 @@ header
     font-size: 14px
 
     h2
-      font: bold 16px/16px Simhei
+      font: bold 16px/16px Arial,Simhei
       margin: 0 0 8px
 
       small
@@ -385,14 +385,18 @@ header
     border-top: 1px solid $gray
     border-bottom: 1px solid $gray
     white-space: nowrap
-    font: 20px/20px Simhei
+    font: 20px/20px Arial, Simhei
     overflow: hidden
     background: $white
 
     img
-      display: inline
+      display: inline-block
       float: none
       vertical-align: top
+      margin-right: 10px
+
+    img:last-child
+      margin-right: 0
 
   h3
     font: bold 20px/25px Simhei
