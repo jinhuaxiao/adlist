@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
       showDownloadPanel(target.index);
+      location.href = target.href;
     }
   }, false);
 
@@ -99,11 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
     Handlebars.templates.detail = Handlebars.compile(template);
   }
 
-  // disabled click event for back-button
-  $('.back-button').addEventListener('click', function (event) {
-    event.preventDefault();
-    return false;
-  }, false);
   // for route
   document.addEventListener('webkitAnimationEnd', function (event) {
     if (event.animationName === 'slideIn') {
@@ -147,4 +143,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('dragstart', function (event) { event.preventDefault(); }, false);
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
+// disabled click event for all <a>
+document.addEventListener('click', function (event) {
+  event.preventDefault();
+  return false;
+}, false);
 window.devicePixelRatio = window.devicePixelRatio || 1;

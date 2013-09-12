@@ -60,12 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
     Handlebars.templates.list = Handlebars.compile(template);
   }
 
-  // disabled click event for back-button
-  $('.back-button').addEventListener('click', function (event) {
-    event.preventDefault();
-    return false;
-  }, false);
-
 
   // 生成列表
   if (data && config.init) {
@@ -89,4 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('dragstart', function (event) { event.preventDefault(); }, false);
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
-window.devicePixelRatio = window.devicePixelRatio || 1;
+// disabled click event for all <a>
+document.addEventListener('click', function (event) {
+  event.preventDefault();
+  return false;
+}, false);
