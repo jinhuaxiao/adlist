@@ -31,6 +31,8 @@
   };
   var detail = $.DetailPanel = function (options) {
     $.Panel.call(this, options);
+
+    this.wrapper.addEventListener('webkitAnimationEnd', this.animationEndHandler, false);
   };
 
   $.inherit(detail, $.Panel);

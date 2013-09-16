@@ -69,7 +69,9 @@
         target = target.parentNode;
       }
       if (!this.detail) {
-        location.href = $('a', target).href;
+        var evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent('click', false, true);
+        $('a', target).dispatchEvent(evt);
         return;
       }
       var index = Array.prototype.indexOf.call(this.$el.children, target);

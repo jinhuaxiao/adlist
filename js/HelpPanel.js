@@ -11,7 +11,7 @@
   var help = $.HelpPanel = function (options) {
     $.Panel.call(this, options);
 
-
+    this.wrapper.addEventListener('webkitAnimationEnd', this.animationEndHandler, false);
     $('button', this.wrapper).addEventListener('tap', function () {
       var form = this.parentNode;
       if (form.elements.comment.value === '') {

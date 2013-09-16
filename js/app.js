@@ -38,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }),
       help = new $.HelpPanel('#help'),
       hasHashchange = 'onhashchange' in window,
-      lastURL = '';
+      lastURL = '',
+      lastDownload = '',
+      doubleTimeout;
   $.detect3DSupport(list.$el);
 
   var touch = {};
@@ -86,7 +88,15 @@ document.addEventListener('DOMContentLoaded', function () {
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
       showDownloadPanel(target.index);
-      location.href = target.href;
+      if (target.href !== lastDownload) {
+        clearTimeout(doubleTimeout);
+        doubleTimeout = setTimeout(function () {
+          lastDownload = '';
+        }, 15000);
+        var evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent('click', false, true);
+        target.dispatchEvent(evt);
+      }
     }
   }, false);
 
@@ -145,7 +155,7 @@ document.addEventListener('dragstart', function (event) { event.preventDefault()
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 // disabled click event for all <a>
 document.addEventListener('click', function (event) {
-  if (!/select|option/i.test(event.target.tagName)) {
+  if (!/select|option/i.test(event.target.tagName) && !$.hasClass(event.target, 'download-button') && !$.hasClass(event.target.parentNode, 'download-button')) {
     event.preventDefault();
     return false;
   }

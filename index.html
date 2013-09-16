@@ -27,7 +27,7 @@
           <div>{{number}}</div>
         </a>
         {{else}}
-        <a class="installed" href="{{download}}">
+        <a class="download-button installed" href="{{download}}">
           已安装
         </a>
         {{/if}}
@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<div id="detail" class="wrapper hide">
+<div id="detail" class="wrapper hide out">
   <script type="text/handlebars-template">
     <div>
       <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
@@ -59,7 +59,7 @@
     {{#if notInstalled}}
     <a href="{{download}}" class="download-button"><i class="icon-download"></i> 立即下载</a>
     {{else}}
-    <a href="{{download}}" class="installed">已安装</a>
+    <a href="{{download}}" class="download-button installed">已安装</a>
     {{/if}}
   </script>
 </div>
@@ -81,7 +81,7 @@
   {{/has_progress}}
 </div>
 
-<div id="help" class="wrapper hide">
+<div id="help" class="wrapper hide out">
   <div class="container">
     <h3>常见问题</h3>
     <dl>

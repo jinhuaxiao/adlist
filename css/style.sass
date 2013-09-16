@@ -94,6 +94,14 @@ header
   bottom: 0
   background: $white
 
+.out
+  -webkit-transform: tranlateX(100%)
+  -webkit-transform: tranlate3d(100%, 0, 0)
+
+.in
+  -webkit-transform: tranlateX(0)
+  -webkit-transform: tranlate3d(0, 0, 0)
+
 #list-wrapper
   z-index: 1
 
@@ -269,8 +277,6 @@ header
     font: 30px/30px Arial
 
 #help
-  -webkit-transform: translateX(100%)
-  -webkit-transform: translate3d(100%, 0, 0)
   z-index: 3
 
   .container
@@ -334,8 +340,6 @@ header
     vertical-align: text-bottom
 
 #detail
-  -webkit-transform: translateX(100%)
-  -webkit-transform: translate3d(100%, 0, 0)
   bottom: 0
   padding: 10px
   z-index: 2

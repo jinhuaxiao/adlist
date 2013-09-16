@@ -53,6 +53,9 @@
     },
     slideOut: function () {
       this.wrapper.className = 'wrapper animated slideOut';
+    },
+    animationEndHandler: function (event) {
+      this.className = event.animationName === 'slideOut' ? 'wrapper hide out' : 'wrapper in';
     }
   };
 }());
