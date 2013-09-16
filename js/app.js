@@ -145,7 +145,9 @@ document.addEventListener('dragstart', function (event) { event.preventDefault()
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 // disabled click event for all <a>
 document.addEventListener('click', function (event) {
-  event.preventDefault();
-  return false;
+  if (!/select|option/i.test(event.target.tagName)) {
+    event.preventDefault();
+    return false;
+  }
 }, false);
 window.devicePixelRatio = window.devicePixelRatio || 1;

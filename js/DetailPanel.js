@@ -36,12 +36,6 @@
   $.inherit(detail, $.Panel);
 
   $.extend(detail.prototype, {
-    getScrollType: function () {
-      return {
-        mouseWheel: false,
-        tap: true
-      };
-    },
     prepare: function () {
       this.wrapper.className = 'wrapper';
       if (this.scroll) {
@@ -57,13 +51,15 @@
       }
       this.wrapper.innerHTML = code;
       this.carousel = $('.carousel', this.wrapper);
-      this.carousel.addEventListener('touchstart', startCarousel, false);
-      this.carousel.addEventListener('touchend', cancelCarousel, false);
-      this.carousel.addEventListener('touchcancel', cancelCarousel, false);
-      var carousel = this.carousel;
-      setTimeout(function () {
-        touch.max = carousel.scrollWidth - carousel.clientWidth;
-      }, 10);
+      if (this.carousel) {
+        this.carousel.addEventListener('touchstart', startCarousel, false);
+        this.carousel.addEventListener('touchend', cancelCarousel, false);
+        this.carousel.addEventListener('touchcancel', cancelCarousel, false);
+        var carousel = this.carousel;
+        setTimeout(function () {
+          touch.max = carousel.scrollWidth - carousel.clientWidth;
+        }, 10);
+      }
 
       $('a', this.wrapper).index = this.index;
       this.prepare();

@@ -9,9 +9,6 @@
  */
 ;(function () {
   'use strict';
-  function onAnimationEnd(event) {
-    this.className = event.animationName === 'slideOut' ? 'wrapper hide' : 'wrapper';
-  }
 
   var Panel = $.Panel = function (options) {
     this.initialize(options);
@@ -25,14 +22,15 @@
           wrapper: options
         };
       }
-      var wrapper = this.wrapper = $(options.wrapper);
-      this.$el = wrapper.firstElementChild;
-      wrapper.addEventListener('webkitAnimationEnd', onAnimationEnd, false);
+      this.wrapper = $(options.wrapper);
 
       this.id = this.wrapper.id;
     },
     getScrollType: function () {
-      return {};
+      return {
+        mouseWheel: false,
+        tap: true
+      };
     },
     render: function (code) {
       this.$el.innerHTML = code;

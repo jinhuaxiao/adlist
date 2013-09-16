@@ -58,6 +58,7 @@
     $.Panel.call(this, options);
 
     this.detail = options.detail;
+    this.$el = this.wrapper.firstElementChild;
 
     this.$el.addEventListener('tap', $.bind(function (event) {
       var target = event.target;

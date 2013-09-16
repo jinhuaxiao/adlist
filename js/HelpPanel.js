@@ -11,28 +11,29 @@
   var help = $.HelpPanel = function (options) {
     $.Panel.call(this, options);
 
-    $('#comments', this.$el).addEventListener('submit', function (event) {
-      if (this.elements.comment.value === '') {
+
+    $('button', this.wrapper).addEventListener('tap', function () {
+      var form = this.parentNode;
+      if (form.elements.comment.value === '') {
         return false;
       }
       $.ajax({
-        url: this.action,
-        method: this.method,
+        url: form.action,
+        method: form.method,
         data: {
           appid: config.appid,
           deviceid: config.deviceid,
           channel: config.channel,
           net: config.net,
-          comment: this.elements.comment.value
+          comment: form.elements.comment.value
         },
-        context: this,
+        context: form,
         success: function () {
           this.elements.submit.innerHTML = '提交成功';
         }
       });
-      this.elements.comment.disabled = true;
-      this.elements.submit.disabled = true;
-      event.preventDefault();
+      form.elements.comment.disabled = true;
+      this.disabled = true;
     }, false);
   };
 
@@ -41,7 +42,7 @@
     $.Panel.prototype.slideIn.call(this);
 
     if (!this.scroll) {
-      this.scroll = new IScroll(this.wrapper);
+      this.scroll = new IScroll(this.wrapper, this.getScrollType());
     }
   }
 }());
