@@ -88,15 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
       showDownloadPanel(target.index);
-      if (target.href !== lastDownload) {
-        clearTimeout(doubleTimeout);
-        doubleTimeout = setTimeout(function () {
-          lastDownload = '';
-        }, 15000);
-        var evt = document.createEvent('MouseEvents');
-        evt.initMouseEvent('click', false, true);
-        target.dispatchEvent(evt);
-      }
     }
   }, false);
 

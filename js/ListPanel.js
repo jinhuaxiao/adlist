@@ -68,18 +68,19 @@
       while (target.className !== 'item') {
         target = target.parentNode;
       }
-      if (!this.detail) {
-        var evt = document.createEvent('MouseEvents');
-        evt.initMouseEvent('click', false, true);
-        $('a', target).dispatchEvent(evt);
-        return;
-      }
       var index = Array.prototype.indexOf.call(this.$el.children, target);
       if ($.hasClass(event.target, 'download-button')
           || $.hasClass(event.target.parentNode, 'download-button')) {
         target = $.hasClass(event.target, 'download-button') ?
             event.target : event.target.parentNode;
         target.index = index;
+        return;
+      }
+
+      if (!this.detail) {
+        var evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent('click', false, true);
+        $('a', target).dispatchEvent(evt);
         return;
       }
 
