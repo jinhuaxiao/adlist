@@ -68,10 +68,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 0);
   }, false);
   document.addEventListener('tap', function (event) {
-    if ($.hasClass(event.target, 'help-button')) {
+    var target = event.target;
+    if ($.hasClass(target, 'help-button')) {
       help.slideIn();
     }
-    if ($.hasClass(event.target, 'back-button')) {
+    if ($.hasClass(target, 'back-button')) {
       if ($.Panel.visiblePages.length > 0) {
         if (hasHashchange) {
           history.back();
@@ -82,9 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
         location.href = 'dianjoy:return';
       }
     }
-    if ($.hasClass(event.target, 'download-button')
-        || $.hasClass(event.target.parentNode, 'download-button')) {
-      var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
+    if ($.isDownloadButton(target)) {
+      target = $.hasClass(target, 'download-button') ? target : target.parentNode;
       setTimeout(function () {
         showDownloadPanel(target.index);
       }, 400);
@@ -148,7 +148,7 @@ document.addEventListener('dragstart', function (event) { event.preventDefault()
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 // disabled click event for all <a>
 document.addEventListener('click', function (event) {
-  if (!/select|option/i.test(event.target.tagName) && !$.hasClass(event.target, 'download-button') && !$.hasClass(event.target.parentNode, 'download-button')) {
+  if (!/select|option/i.test(event.target.tagName) && !$.isDownloadButton(event.target)) {
     event.preventDefault();
     return false;
   }

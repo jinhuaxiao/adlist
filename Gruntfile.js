@@ -307,7 +307,7 @@ module.exports = function (grunt) {
         },
         files: [{
           src: [build + 'index.html', build + 'css/style.css', build + 'js/app.min.js', build + 'img/*'],
-          dest: '..'}]
+          dest: ''}]
       },
       en: {
         options: {
@@ -317,7 +317,7 @@ module.exports = function (grunt) {
         },
         files: [{
           src: [build + 'index-en.html', build + 'css/style-en.css', build + 'js/app-en.min.js', build + 'img/*'],
-          dest: '..'
+          dest: ''
         }]
       }
     }

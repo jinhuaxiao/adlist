@@ -69,26 +69,20 @@
         target = target.parentNode;
       }
       var index = Array.prototype.indexOf.call(this.$el.children, target);
-      if ($.hasClass(event.target, 'download-button')
-          || $.hasClass(event.target.parentNode, 'download-button')) {
+      if ($.isDownloadButton(event.target)) {
         target = $.hasClass(event.target, 'download-button') ?
             event.target : event.target.parentNode;
         target.index = index;
         return;
       }
 
-      if (!this.detail) {
-        var evt = document.createEvent('MouseEvents');
-        evt.initMouseEvent('click', false, true);
-        $('a', target).dispatchEvent(evt);
-        return;
+      if (this.detail) {
+        var item = data.offers[index];
+        item.serv = data.serv;
+        this.detail.index = index;
+        this.detail.render(Handlebars.templates.detail(item));
+        this.detail.slideIn();
       }
-
-      var item = data.offers[index];
-      item.serv = data.serv;
-      this.detail.index = index;
-      this.detail.render(Handlebars.templates.detail(item));
-      this.detail.slideIn();
     }, this), false);
   };
 

@@ -102,4 +102,7 @@
   $.isString = function (obj) {
     return Object.prototype.toString.call(obj) === '[object String]';
   };
+  $.isDownloadButton = function (dom) {
+    return $.hasClass(dom, 'download-button') || $.hasClass(dom.parentNode, 'download-button');
+  }
 }(window));

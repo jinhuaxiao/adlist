@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var list = new $.ListPanel({
         wrapper: '#list-wrapper'
       }),
-      hasHashchange = 'onhashchange' in window;
+      timeout,
+      lastDownload = '';
 
   var touch = {};
   $('header').addEventListener('touchstart', function (event) {
@@ -40,16 +41,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 0);
   }, false);
   document.addEventListener('tap', function (event) {
-    if ($.hasClass(event.target, 'back-button')) {
-      if ($.Panel.visiblePages.length > 0) {
-        if (hasHashchange) {
-          history.back();
-        } else {
-          $.Panel.visiblePages.pop().slideOut();
-        }
-      } else {
-        location.href = 'dianjoy:return';
+    var target = event.target;
+    if ($.hasClass(target, 'back-button')) {
+      location.href = 'dianjoy:return';
+    }
+    if (list.$el.contains(target) && target !== list.$el && !$.isDownloadButton(target)) {
+      while (target.className !== 'item') {
+        target = target.parentNode;
       }
+      target = $('a', target);
+      if (target.href === lastDownload) {
+        return;
+      }
+      location.href = lastDownload = target.href;
+      clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        lastDownload = '';
+      }, 15000);
     }
   }, false);
 
@@ -85,6 +93,8 @@ document.addEventListener('dragstart', function (event) { event.preventDefault()
 document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 // disabled click event for all <a>
 document.addEventListener('click', function (event) {
-  event.preventDefault();
-  return false;
+  if (!$.isDownloadButton(event.target)) {
+    event.preventDefault();
+    return false;
+  }
 }, false);
