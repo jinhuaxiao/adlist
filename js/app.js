@@ -38,9 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }),
       help = new $.HelpPanel('#help'),
       hasHashchange = 'onhashchange' in window,
-      lastURL = '',
-      lastDownload = '',
-      doubleTimeout;
+      lastURL = '';
   $.detect3DSupport(list.$el);
 
   var touch = {};
@@ -87,7 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if ($.hasClass(event.target, 'download-button')
         || $.hasClass(event.target.parentNode, 'download-button')) {
       var target = $.hasClass(event.target, 'download-button') ? event.target : event.target.parentNode;
-      showDownloadPanel(target.index);
+      setTimeout(function () {
+        showDownloadPanel(target.index);
+      }, 400);
     }
   }, false);
 
@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', function () {
       location.hash = '#/' + event.target.id;
     } else if (event.animationName === 'slideUp') {
       event.target.className = 'hide';
+    } else if (event.animationName === 'slideDown') {
+      event.target.className = 'in';
     }
   }, false);
 

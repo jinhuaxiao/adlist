@@ -95,15 +95,16 @@ header
   background: $white
 
 .out
-  -webkit-transform: tranlateX(100%)
-  -webkit-transform: tranlate3d(100%, 0, 0)
+  -webkit-transform: translateX(100%)
+  -webkit-transform: translate3d(100%, 0, 0)
 
 .in
-  -webkit-transform: tranlateX(0)
-  -webkit-transform: tranlate3d(0, 0, 0)
+  -webkit-transform: translate(0, 0)
+  -webkit-transform: translate3d(0, 0, 0)
 
 #list-wrapper
   z-index: 1
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 
 #list
 
@@ -222,11 +223,10 @@ header
 
 #download-panel
   position: absolute
-  top: 65px
+  top: -235px
   left: 5px
   right: 5px
   padding: 20px
-  z-index: 9
   background: $white
   box-shadow: 0 1px 4px 1px $alpha-dark
 
@@ -275,6 +275,15 @@ header
     border: none
     background: transparent
     font: 30px/30px Arial
+
+#download-panel.slideDown,
+#download-panel.slideUp,
+#download-panel.in
+  z-index: 9
+
+#download-panel.in
+  -webkit-transform: translateY(300px)
+  -webkit-transform: translate3d(0, 300px, 0)
 
 #help
   z-index: 3
