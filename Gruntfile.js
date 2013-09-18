@@ -126,6 +126,12 @@ module.exports = function (grunt) {
         dest: temp + 'index.html',
         names: ['list', 'detail']
       },
+      basic: {
+        src: 'index.html',
+        dest: temp + 'basic.html',
+        names: ['list', 'detail'],
+        isBasic: true
+      },
       sdk: {
         src: 'index.html',
         isSDK: true,
@@ -225,7 +231,7 @@ module.exports = function (grunt) {
         }]
       },
       basic: {
-        src: [temp + 'index.html'],
+        src: [temp + 'basic.html'],
         dest: build + 'templates/template-basic.html',
         replacements: [{
           from: HEADER_TOKEN,
@@ -328,21 +334,25 @@ module.exports = function (grunt) {
         dest = this.data.dest,
         names = this.data.names,
         isSDK = this.data.isSDK,
+        isBasic = this.data.isBasic,
         content = grunt.file.read(src),
         REG = /<script type="text\/handlebars-template">([\s\S]+?)<\/script>/mg,
         index = 0;
     content = content.replace(REG, function (match, template) {
-      var part = names[index];
+      var filename = names[index];
       if (isSDK) {
-        part += '-sdk';
+        filename += '-sdk';
         template = template.replace(/\{\{download\}\}/g, SERV + '{{download}}');
       }
-      var basic = template.replace(/<img .*\/>/, ''),
-      basic = basic.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
-      grunt.file.write(temp + 'templates/' + part + '.html', template);
-      grunt.file.write(temp + 'templates/' + part + '-basic.html', basic);
+      if (isBasic) {
+        filename += '-basic';
+        template = template.replace(/<img .*\/>/, '');
+        template = template.replace(/<div class="carousel">[\s\S]+?<\/div>/, '');
+
+      }
+      grunt.file.write(temp + 'templates/' + filename + '.html', template);
       index++;
-      return (!isSDK && /list/.test(part)) ? convertToMustache(template) : '';
+      return (!isSDK && /list/.test(filename)) ? convertToMustache(template) : '';
     });
     if (isSDK) {
       content = content + SDK_JS;
@@ -362,5 +372,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.registerTask('default', ['clean:start', 'extract', 'replace', 'handlebars', 'concat', 'uglify:sdk', 'cssmin', 'copy', 'compress', 'uglify:web', 'clean:end']);
-  grunt.registerTask('debug', ['clean', 'extract', 'handlebars']);
+  grunt.registerTask('debug', ['clean', 'extract']);
 }
