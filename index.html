@@ -24,7 +24,7 @@
         {{#if notInstalled}}
         <a class="download-button {{#if is_reg}}reg{{/if}} {{#if is_task}}task{{/if}}" href="{{download}}">
           {{cate}}
-          <div>{{number}}</div>
+          <div>{{fnumber}}</div>
         </a>
         {{else}}
         <a class="download-button installed" href="{{download}}">
@@ -43,7 +43,11 @@
       <img src="{{serv}}{{icon}}" width="80" height="80" class="item-icon" />
       <div class="desc">
         <h2>{{name}}</h2>
-        <span>{{cate}}</span><span>{{number}}</span>
+        <span>{{cate}}</span><span>{{fnumber}}</span>
+      </div>
+      <div class="success">
+        <h4>完成条件：</h4>{{success}}
+
       </div>
       <div class="carousel">
         {{#each thumbnail}}
