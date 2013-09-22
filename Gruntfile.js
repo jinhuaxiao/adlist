@@ -114,8 +114,8 @@ module.exports = function (grunt) {
       },
       minify: {
         files: [
-          {src: ['css/style.css', 'css/animate.css'], dest: build + 'css/style.css'},
-          {src: ['css/style.css', 'css/xs.css', 'css/animate.css'], dest: build + 'css/xs.css'},
+          {src: ['css/style.css', 'css/full.css', 'css/animate.css'], dest: build + 'css/style.css'},
+          {src: ['css/style.css', 'css/full.css', 'css/xs.css', 'css/animate.css'], dest: build + 'css/xs.css'},
           {src: ['css/style.css'], dest: build + 'css/style-en.css'}
         ]
       }
