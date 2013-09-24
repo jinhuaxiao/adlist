@@ -1,0 +1,1 @@
+{"name":"Adlist","tagline":"广告墙前端代码，分支均从这个里面做","body":"# Dianjoy 广告墙\r\n\r\n广告墙属于典型的列表式应用：打开后是无尽列表，通过滑动手指驱使列表滚动，上拉加载更多内容，下拉刷新列表（这次没做）。单击列表中的某项，打开详细页；单击上面的后退按钮，退回上一级页面。\r\n\r\n## Demo\r\n\r\n","google":"UA-44284092-1","note":"Don't delete this file! It's used internally to help with page regeneration."}
