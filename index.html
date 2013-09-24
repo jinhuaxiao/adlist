@@ -12,15 +12,33 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
+    <style>
+      h1, h2,
+      #main-content h1,
+      #main-content h2 {
+        font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, 'Microsoft Yahei', serif;
+      }
+      .qrcode {
+        margin-bottom: 20px;
+      }
+      .qrcode img {
+        display: block;
+        background: #FFF;
+        box-shadow: 0 2px 2px 0 #666;
+      }
+      iframe {
+        border: 4px solid #08C;
+        padding: 2px;
+      }
+    </style>
     <title>Adlist by Dianjoy</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <h1>Adlist</h1>
-        <h2>广告墙前端代码，分支均从这个里面做</h2>
+        <h1>点乐广告墙</h1>
+        <h2>广告墙前端代码。针对不同应用场景输出不同结果。</h2>
         <a href="https://github.com/Dianjoy/adlist" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
@@ -35,6 +53,16 @@
 
 <h2>
 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
+          <figure class="qrcode"><img src="images/qrcode.png" width="200" height="200" /></figure>
+          <p>请使用手机扫描二维码访问。或在Chrome浏览器中开启“Emulate touch events”，Demo只响应触摸事件。</p>
+          <p><small>（经我测试，微信直接打开体验很差，建议用手机浏览器打开。）</small></p>
+          <iframe width="600" height="600" scrolling="no" border="0"
+                  src="http://roudemos.sinaapp.com/adlist/"></iframe>
+
+          <h2><a name="share" class="anchor" href="#share"><span class="octicon octicon-link"></span></a>经验分享</h2>
+          <p>
+            <a href="http://blog.meathill.com/tech/fe/android-webview-almost-kill-me.html" target="_blank" title="悲催的Android Webview——记新版广告墙开发">悲催的Android Webview——记新版广告墙开发</a>
+          </p>
         </section>
 
         <aside id="sidebar">
