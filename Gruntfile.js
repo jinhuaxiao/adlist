@@ -8,10 +8,13 @@
 module.exports = function (grunt) {
   var build = 'build/',
       temp = 'temp/',
-      JS = '<script src="js/app.min.js"></script>',
-      EN = '<script src="js/app-en.min.js"></script>',
-      BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
-      SDK_JS = '<script src="data.js"></script>',
+      JS = '<script src="js/app.min.js" async></script>',
+      EN = '<script src="js/app-en.min.js" async></script>',
+      BASIC = '<script src="js/basic.min.js" async></script>', // 模板中不包含img
+      SDK_JS = '<script src="data.js" async></script>',
+      DATA_JS = wrapJS(grunt.file.read('js/data.js')),
+
+
       REPLACE_TOKEN = /<!-- replace start -->[\S\s]+<!-- replace over -->/,
       TPL_TOKEN = /{{#(\w+)}}[\S\s]+{{\/\1}}/gm,
       SERV = 'http://a.dianjoy.com/dev/api/adlist/',
@@ -221,7 +224,7 @@ module.exports = function (grunt) {
           to: grunt.file.read('add-ons/header.html')
         }, {
           from: REPLACE_TOKEN,
-          to: JS
+          to: DATA_JS + JS
         }, {
           from: '"list-wrapper" class="wrapper hide"',
           to: '"list-wrapper" class="wrapper"'
@@ -238,7 +241,7 @@ module.exports = function (grunt) {
           to: grunt.file.read('add-ons/header.html')
         },{
           from: REPLACE_TOKEN,
-          to: BASIC
+          to: DATA_JS + BASIC
         }, {
           from: '"list-wrapper" class="wrapper hide"',
           to: '"list-wrapper" class="wrapper"'
@@ -255,7 +258,7 @@ module.exports = function (grunt) {
           to: 'xs.css'
         }, {
           from: REPLACE_TOKEN,
-          to: JS
+          to: DATA_JS + JS
         }, {
           from: '{{datetime}}',
           to: grunt.template.today('yyyy-mm-dd HH:MM:ss')
@@ -266,7 +269,7 @@ module.exports = function (grunt) {
         overwrite: true,
         replacements: [{
           from: REPLACE_TOKEN,
-          to: JS
+          to: SDK_JS + JS
         }, {
           from: TPL_TOKEN,
           to: ''
@@ -294,7 +297,7 @@ module.exports = function (grunt) {
         overwrite: true,
         replacements: [{
           from: REPLACE_TOKEN,
-          to: EN
+          to: SDK_JS + EN
         }, {
           from: TPL_TOKEN,
           to: ''
@@ -354,12 +357,6 @@ module.exports = function (grunt) {
       index++;
       return (!isSDK && /list/.test(filename)) ? convertToMustache(template) : '';
     });
-    if (isSDK) {
-      content = content + SDK_JS;
-    } else {
-      var footer = grunt.file.read('js/data.js');
-      content += wrapJS(footer);
-    }
     grunt.file.write(dest, content);
   });
 
