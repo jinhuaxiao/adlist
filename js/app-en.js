@@ -89,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
   ga('send', 'pageview');
 });
 
-document.addEventListener('dragstart', function (event) { event.preventDefault(); }, false);
-document.addEventListener('touchmove', function (event) { event.preventDefault(); }, false);
 // disabled click event for all <a>
 document.addEventListener('click', function (event) {
   if (!$.isDownloadButton(event.target)) {

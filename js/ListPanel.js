@@ -8,7 +8,7 @@
 ;(function () {
   'use strict';
   var timeout = 0,
-      REMOTE = /dianjoy\.com/i.test(location.hostname) ? '' : 'http://a.dianjoy.com/dev/api/adlist/adlist.php';
+      REMOTE = /dianjoy\.com/i.test(location.hostname) ? '' : 'http://whale.dianjoy.com/fea3661/api/adlist/adlist.php';
 
   function getParams(string) {
     var arr = string.substr(string.indexOf('?') + 1).split('&'),
