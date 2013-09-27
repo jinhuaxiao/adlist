@@ -82,6 +82,8 @@
         this.detail.index = index;
         this.detail.render(Handlebars.templates.detail(item));
         this.detail.slideIn();
+
+        ga('send', 'event', 'detail', 'open', 'item.name');
       }
     }, this), false);
   };
@@ -175,11 +177,16 @@
       }
       if (this.isRefresh) {
         this.render(Handlebars.templates.list(more));
+        $('#money').innerHTML = more.money;
         this.isRefresh = false;
-        data.offers = more.offers;
+        if ('data' in window) {
+          data.offers = more.offers;
+        }
       } else {
         this.append(Handlebars.templates.list(more));
-        data.offers = data.offers.concat(more.offers);
+        if ('data' in window) {
+          data.offers = data.offers.concat(more.offers);
+        }
       }
       this.$el.className = '';
     },

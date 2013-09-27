@@ -8,10 +8,10 @@
 module.exports = function (grunt) {
   var build = 'build/',
       temp = 'temp/',
-      JS = '<script src="js/app.min.js" async></script>',
-      EN = '<script src="js/app-en.min.js" async></script>',
-      BASIC = '<script src="js/basic.min.js" async></script>', // 模板中不包含img
-      SDK_JS = '<script src="data.js" async></script>',
+      JS = '<script src="js/app.min.js"></script>',
+      EN = '<script src="js/app-en.min.js"></script>',
+      BASIC = '<script src="js/basic.min.js"></script>', // 模板中不包含img
+      SDK_JS = '<script src="data.js"></script>',
       DATA_JS = wrapJS(grunt.file.read('js/data.js')),
 
 

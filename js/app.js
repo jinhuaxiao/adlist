@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
       target = $.hasClass(target, 'download-button') ? target : target.parentNode;
       setTimeout(function () {
         showDownloadPanel(target.index);
+        ga('send', 'event', 'download', target.parentNode.id === 'detail' ? 'detail' : 'list');
       }, 400);
     }
   }, false);
